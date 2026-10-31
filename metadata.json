@@ -1,0 +1,6 @@
+{
+  "name": "SubSecure AI",
+  "description": "Intelligent Subscription Management & Billing Platform with SHA-256 tamper-evident audit ledger, recurring billing simulation, and AI finance copilot.",
+  "permissions": [],
+  "capabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

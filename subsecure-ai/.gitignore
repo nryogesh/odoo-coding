@@ -1,9 +1,0 @@
-__pycache__/
-*.pyc
-.env
-.venv/
-subsecure.db
-*.db
-.pytest_cache/
-node_modules/
-dist/

@@ -1,0 +1,1231 @@
+# MASTER IMPLEMENTATION PROMPT – SUBSECURE AI
+## Complete Enhancement, Integration, Testing & Hackathon Readiness
+
+Act as a Senior Full-Stack Engineer, Backend Architect, Database Engineer, Security Engineer, QA Engineer, and UI/UX Designer.
+
+Your task is to thoroughly inspect, improve, complete, integrate, and test the existing **SubSecure AI – Intelligent Subscription Management & Billing Platform**.
+
+This is an existing project. Do NOT rebuild it from scratch.
+
+Your objective is to transform the existing implementation into a complete, reliable, professional subscription-management system that satisfies the original Subscription Management System problem statement and stands out in a hackathon evaluation.
+
+---
+
+# 1. FIRST: UNDERSTAND THE EXISTING PROJECT
+
+Before modifying anything:
+
+1. Inspect the entire existing repository.
+2. Understand the frontend architecture, backend architecture, database schema, API routes, services, models, authentication, and existing tests.
+3. Identify all currently implemented features.
+4. Identify partially implemented features, broken integrations, missing functionality, and unused components.
+5. Check whether frontend components are connected to actual backend APIs.
+6. Verify database relationships and business logic.
+7. Check existing API contracts before changing them.
+8. Run the existing backend tests, frontend tests, and production build.
+9. Create a checklist of existing functionality and missing functionality.
+
+The existing stack must be retained:
+
+**Frontend**
+- React 18
+- Vite
+- React Router
+- Tailwind CSS
+- Recharts
+- Lucide React
+
+**Backend**
+- Python
+- FastAPI
+- SQLAlchemy
+- Pydantic v2
+- JWT authentication
+- bcrypt password hashing
+
+**Database**
+- SQLite for the existing development setup.
+
+Do not migrate to Node.js, Express, MongoDB, PostgreSQL, or another framework simply to rewrite existing functionality.
+
+Preserve the existing API contracts wherever possible. If an API change is necessary, update every dependent frontend service and test.
+
+IMPORTANT: Do not remove working functionality to make implementation easier.
+
+---
+
+# 2. AUTHENTICATION AND USER MANAGEMENT
+
+Complete the authentication system.
+
+### Required functionality
+
+- User registration.
+- User login.
+- Secure logout.
+- JWT access-token validation.
+- Current-user profile.
+- Password hashing using bcrypt.
+- Password validation.
+- Email uniqueness validation.
+- Inactive account rejection.
+- Forgot password.
+- Password reset using secure, time-limited reset tokens.
+- Change password.
+- Appropriate error messages.
+
+### Role-based access control
+
+Implement three roles:
+
+**ADMIN**
+- Complete system access.
+- Create, update, and manage staff.
+- Manage customers.
+- Manage products and variants.
+- Manage plans.
+- Manage quotations and subscriptions.
+- Manage billing, invoices, payments, taxes, and discounts.
+- Access analytics, reports, audit records, and security alerts.
+
+**STAFF**
+- Access permitted operational modules.
+- Manage assigned or permitted customer records.
+- Create and manage quotations.
+- Handle subscriptions and invoices according to permissions.
+- Record payments where authorized.
+- View relevant reports.
+- Cannot create administrators or staff accounts.
+- Cannot modify restricted system settings.
+
+**CUSTOMER**
+- Access only their own customer account.
+- View their own subscriptions.
+- View their own invoices.
+- View their own payments.
+- View outstanding balances.
+- Submit subscription-related requests.
+- View their subscription status and history.
+
+All permissions MUST be enforced in FastAPI backend dependencies and services.
+
+Do not depend only on hiding frontend buttons or routes.
+
+### Staff dashboard
+
+Create a dedicated staff experience with:
+- Assigned customer count.
+- Active subscriptions.
+- Pending quotations.
+- Invoices requiring attention.
+- Upcoming renewals.
+- Recent activity.
+- Relevant operational actions.
+
+---
+
+# 3. PRODUCT AND PLAN MANAGEMENT
+
+Complete product and subscription plan management.
+
+### Products
+
+Each product should support:
+- Product name.
+- Product type.
+- Sales price.
+- Cost price.
+- Description or notes.
+- Product status.
+- Product variants.
+- Variant-specific additional pricing.
+
+Example:
+
+Product: Software Subscription
+
+Base price: ₹1,000
+
+Variant: Odoo
+
+Additional price: ₹560
+
+Final price: ₹1,560
+
+The backend must calculate the final price using the selected variant.
+
+### Subscription plans
+
+Each plan should support:
+- Plan name.
+- Associated product.
+- Price.
+- Billing interval.
+- Daily, weekly, monthly, and yearly billing.
+- Minimum quantity.
+- Start date.
+- End date.
+- Plan availability.
+- Automatic closure settings.
+- Early closure permission.
+- Pause permission.
+- Renewal permission.
+
+Ensure the frontend forms and backend validations support all these fields.
+
+---
+
+# 4. QUOTATION MANAGEMENT AND TEMPLATES
+
+Complete the quotation workflow.
+
+### Quotation functionality
+
+- Create quotations for customers.
+- Select products and subscription plans.
+- Add multiple quotation lines.
+- Configure quantities.
+- Calculate unit prices.
+- Apply taxes.
+- Apply eligible discounts.
+- Calculate subtotal and final total.
+- Configure quotation validity.
+- View quotation details.
+- Update permitted quotation fields.
+- Change quotation status.
+- Convert eligible quotations into subscriptions.
+
+### Quotation templates
+
+Implement a complete template management feature.
+
+Administrators and authorized staff should be able to:
+
+- Create quotation templates.
+- Name and describe templates.
+- Add predefined product and plan lines.
+- Configure default quantities.
+- Configure validity periods.
+- Edit templates.
+- Delete templates where permitted.
+- Select an existing template when creating a quotation.
+
+A quotation generated from a template should populate the relevant information automatically.
+
+All financial calculations must happen on the backend.
+
+Never trust totals submitted by the frontend.
+
+---
+
+# 5. SUBSCRIPTION LIFECYCLE MANAGEMENT
+
+Complete the subscription lifecycle.
+
+Each subscription should contain:
+
+- Unique subscription number.
+- Customer.
+- Subscription plan.
+- Product lines.
+- Quantity.
+- Unit price.
+- Tax.
+- Discount.
+- Start date.
+- Expiry date.
+- Payment terms.
+- Billing interval.
+- Next billing date.
+- Current status.
+
+### Lifecycle
+
+Implement and validate the permitted transitions:
+
+Draft → Quotation → Confirmed → Active → Closed.
+
+Also support applicable pause, resume, renewal, expiry, and early-closure operations.
+
+Requirements:
+
+- Validate transitions in the backend.
+- Respect plan-level lifecycle permissions.
+- Prevent invalid transitions.
+- Automatically process eligible expiry conditions.
+- Calculate the next billing date correctly.
+- Maintain a subscription event history.
+- Provide a subscription timeline.
+- Provide a historical state-at-time view.
+- Record the actor responsible for important changes.
+
+The frontend must display lifecycle status clearly.
+
+---
+
+# 6. ADVANCED BILLING ENGINE – HIGHEST PRIORITY
+
+The billing engine is the central differentiator of SubSecure AI.
+
+Do not replace it with basic invoice-generation CRUD operations.
+
+Improve the existing billing engine while preserving its transaction handling and idempotency mechanisms.
+
+### A. Billing Day Rehearsal
+
+Implement a complete billing simulation interface.
+
+The user should be able to select a billing period and run a preview.
+
+The preview must display:
+
+- Total subscriptions evaluated.
+- Eligible subscriptions.
+- Skipped subscriptions.
+- Blocked subscriptions.
+- Already-billed subscriptions.
+- Expected invoice count.
+- Expected subtotal.
+- Discount amount.
+- Tax amount.
+- Expected total.
+- Unusual quantity warnings.
+- Expired subscription warnings.
+- Invalid or missing billing information.
+
+The simulation must be read-only.
+
+It must never generate invoices or modify subscription financial state.
+
+### B. Billing execution
+
+After reviewing the simulation, an authorized user should be able to confirm the billing run.
+
+The backend must:
+
+1. Revalidate the billing period.
+2. Revalidate subscription eligibility.
+3. Calculate financial values again.
+4. Generate invoice records.
+5. Generate invoice line items.
+6. Store the billing-period identifier.
+7. Update the next billing date.
+8. Record the billing execution.
+9. Create audit events.
+10. Commit related operations safely within transactions.
+
+If an operation fails, prevent inconsistent financial records.
+
+### C. Duplicate billing protection
+
+Preserve and strengthen:
+
+- Database unique constraint on subscription ID and billing period.
+- Billing idempotency records.
+- Duplicate request detection.
+- Transaction-safe invoice creation.
+- Clear duplicate billing responses.
+
+A repeated billing request must never generate a second invoice for the same subscription and billing period.
+
+Test simultaneous or repeated requests where practical.
+
+### D. Automated recurring billing scheduler
+
+Implement automatic daily billing.
+
+Requirements:
+
+- Introduce a reliable scheduled billing mechanism.
+- Identify subscriptions due for billing.
+- Trigger the existing billing engine.
+- Use the same simulation and validation rules.
+- Execute only eligible subscriptions.
+- Record each scheduled billing run.
+- Prevent duplicate execution.
+- Record success, failure, skipped, and duplicate counts.
+- Provide an administrator-controlled enable/disable setting.
+- Display the last execution time and next scheduled execution.
+- Allow authorized administrators to trigger a manual billing run.
+
+Do not create a second independent billing implementation for the scheduler.
+
+The scheduler must call the existing billing service.
+
+Use a suitable Python scheduling solution and ensure that application restarts do not result in duplicate jobs or duplicate billing.
+
+---
+
+# 7. COMPLETE INVOICE MANAGEMENT
+
+Improve the existing invoice module.
+
+### Invoice details
+
+Each invoice should contain:
+
+- Unique invoice number.
+- Customer information.
+- Subscription reference.
+- Invoice date.
+- Due date.
+- Billing period.
+- Product and service line items.
+- Quantity.
+- Unit price.
+- Subtotal.
+- Discount.
+- Tax.
+- Total.
+- Amount paid.
+- Outstanding balance.
+- Invoice status.
+
+### Invoice lifecycle
+
+Support the required transitions:
+
+Draft → Confirmed → Paid.
+
+Also handle cancelled and overdue conditions appropriately.
+
+### Invoice actions
+
+Implement:
+
+- View invoice.
+- Confirm invoice.
+- Cancel invoice when permitted.
+- Print invoice.
+- Download invoice as PDF.
+- Export invoice information.
+- View payment history.
+- View outstanding balance.
+
+Generate a professional PDF invoice containing:
+
+- Business information.
+- Customer information.
+- Invoice number.
+- Invoice date and due date.
+- Itemised charges.
+- Taxes and discounts.
+- Final amount.
+- Payment information.
+- Invoice status.
+
+If email sending is not configured, provide PDF download and a clear send-not-configured status rather than pretending that an email was sent.
+
+---
+
+# 8. DISCOUNT MANAGEMENT
+
+Complete discount management with an administrator-facing interface.
+
+Only authorized administrators should create or modify discount rules.
+
+### Discount types
+
+- Fixed amount discounts.
+- Percentage discounts.
+
+### Discount conditions
+
+Each discount should support:
+
+- Discount name.
+- Description.
+- Discount value.
+- Minimum purchase amount.
+- Minimum quantity.
+- Start date.
+- Expiry date.
+- Maximum usage limit.
+- Current usage count.
+- Product-specific association.
+- Subscription-level association.
+- Active/inactive status.
+
+### Discount application
+
+The billing engine must:
+
+- Identify eligible discounts.
+- Validate discount dates.
+- Validate minimum quantity.
+- Validate minimum purchase.
+- Validate maximum usage.
+- Apply eligible discounts automatically.
+- Prevent invalid or repeated application.
+- Record discount usage.
+- Display discounts on invoice line items or invoice summaries as appropriate.
+
+The same discount must not be applied multiple times to one invoice unintentionally.
+
+Ensure discount calculations cannot make invoice totals negative.
+
+---
+
+# 9. TAX MANAGEMENT
+
+Create a complete tax management interface.
+
+Administrators should be able to:
+
+- Create tax rules.
+- Update tax rules.
+- Activate/deactivate rules.
+- Configure tax rates.
+- Configure tax categories.
+- Configure effective start and end dates.
+- Associate tax rules with applicable products or services.
+
+The backend must automatically apply eligible tax rules during quotation calculation and invoice generation.
+
+Requirements:
+
+- Validate tax applicability.
+- Handle multiple tax rules where permitted.
+- Avoid duplicate tax application.
+- Store the applied tax details in invoice line-item snapshots.
+- Ensure historical invoices remain unchanged when tax rules are updated later.
+
+All tax calculations must be server-side.
+
+---
+
+# 10. PAYMENT MANAGEMENT AND RECONCILIATION
+
+Complete payment management.
+
+Support these payment methods:
+
+- UPI.
+- Cash.
+- Card.
+- Bank transfer.
+
+### Payment recording
+
+Each payment should contain:
+
+- Payment reference.
+- Invoice reference.
+- Customer.
+- Payment amount.
+- Payment method.
+- Payment date.
+- Notes.
+- Created by.
+
+### Reconciliation
+
+Implement:
+
+- Full payments.
+- Partial payments.
+- Outstanding balance calculation.
+- Payment history.
+- Invoice payment status updates.
+- Payment validation.
+- Overpayment rejection.
+- Payment reference uniqueness.
+
+The invoice should become PAID only after the complete outstanding amount has been received.
+
+Ensure multiple partial payments are reconciled correctly.
+
+Important: This is an application-level payment recording system unless a real payment gateway is separately integrated. Do not represent manually recorded payments as externally processed transactions.
+
+---
+
+# 11. REVENUE ANALYTICS AND FINANCIAL DASHBOARD
+
+Improve the existing dashboard and analytics services.
+
+The dashboard must use real backend data.
+
+Never introduce hardcoded or fabricated KPI values.
+
+### Dashboard KPIs
+
+Display:
+
+- Total customers.
+- Active subscriptions.
+- Paused subscriptions.
+- Closed subscriptions.
+- Monthly Recurring Revenue (MRR).
+- Annual Recurring Revenue (ARR).
+- Total invoiced revenue.
+- Revenue collected.
+- Outstanding revenue.
+- Overdue amount.
+- Collection rate.
+- Upcoming renewals.
+
+### Revenue analytics
+
+Implement real backend-backed charts for:
+
+1. Monthly revenue trends.
+2. Billed versus collected revenue.
+3. Outstanding revenue.
+4. MRR breakdown.
+5. Subscription growth.
+6. Subscription status distribution.
+7. Upcoming renewals.
+8. Churn and expiry trends.
+
+### Filters
+
+Provide:
+
+- Date range.
+- Monthly.
+- Quarterly.
+- Yearly.
+- Customer.
+- Subscription status.
+- Invoice status.
+
+Ensure the chart data comes from actual database records through analytics APIs.
+
+### Financial calculations
+
+Normalize subscription intervals consistently when calculating MRR and ARR.
+
+Clearly distinguish:
+
+- Invoiced revenue.
+- Collected revenue.
+- Outstanding revenue.
+- Recurring revenue.
+
+Do not treat all these financial measures as interchangeable.
+
+---
+
+# 12. IMPROVE THE AI FINANCE COPILOT
+
+Retain the existing constrained-query architecture.
+
+Do not allow an LLM to generate and execute arbitrary SQL.
+
+Improve the supported finance queries.
+
+The user should be able to ask questions such as:
+
+- What is our current MRR?
+- What is our current ARR?
+- How much revenue did we collect this month?
+- How much money is outstanding?
+- Show all overdue invoices.
+- Which subscriptions are expiring next week?
+- Which customers have paused subscriptions?
+- Which customers have unpaid invoices?
+- Show subscriptions with unusual quantity changes.
+- Which customers have the highest outstanding balances?
+
+### Requirements
+
+- Integrate Gemini when a valid API key is configured.
+- Maintain deterministic fallback functionality.
+- Validate AI-generated structured query representations.
+- Use allowlisted entities and fields.
+- Use fixed ORM query builders.
+- Enforce role permissions.
+- Enforce customer data isolation.
+- Restrict query limits.
+- Ensure all queries are read-only.
+- Display when fallback mode is being used.
+- Show meaningful empty states and error messages.
+
+Do not claim that live Gemini is operational until it has been tested with a valid key.
+
+---
+
+# 13. ADVANCED AUDIT AND SECURITY CENTER
+
+Preserve the existing SHA-256 event-chain implementation.
+
+Improve the Audit and Security Center.
+
+### Audit records
+
+Record important events, including:
+
+- User registration.
+- Login and relevant authentication events.
+- Product creation and updates.
+- Plan creation and updates.
+- Quotation creation and transitions.
+- Subscription creation and transitions.
+- Billing simulation.
+- Billing execution.
+- Invoice creation.
+- Invoice cancellation.
+- Payment recording.
+- Discount creation and application.
+- Tax rule changes.
+- Staff creation.
+- Important permission changes.
+
+Each audit event should capture:
+
+- Event ID.
+- Sequence number.
+- Timestamp.
+- Actor.
+- Event type.
+- Related entity.
+- Event payload.
+- Previous hash.
+- Current hash.
+
+### Hash verification
+
+The verification service must:
+
+- Validate sequence ordering.
+- Validate previous-hash relationships.
+- Recalculate event hashes.
+- Detect modifications.
+- Identify the first invalid sequence.
+- Return a clear verification result.
+
+### Security alerts
+
+Implement a complete alert management workflow.
+
+Support alerts for:
+
+- Duplicate billing attempts.
+- Unusual billing quantities.
+- Suspicious financial activity.
+- Repeated failed authentication attempts where appropriate.
+- Audit-chain verification failures.
+
+Provide:
+
+- Alert severity.
+- Alert category.
+- Description.
+- Timestamp.
+- Related entity.
+- Alert status.
+- Resolution notes.
+- Resolved by.
+- Resolved timestamp.
+
+Authorized administrators should be able to review, acknowledge, and resolve alerts.
+
+Do not silently delete security evidence.
+
+---
+
+# 14. CUSTOMER PORTAL
+
+Improve the customer-facing portal.
+
+Customers should have a clean and simple interface containing:
+
+### Customer dashboard
+
+- Active subscriptions.
+- Upcoming renewals.
+- Outstanding balances.
+- Recent invoices.
+- Recent payments.
+
+### My subscriptions
+
+- View subscription details.
+- View subscription status.
+- View plan and product details.
+- View billing dates.
+- View subscription history.
+- Submit pause requests where permitted.
+- Submit cancellation requests where permitted.
+- Submit renewal-related requests where permitted.
+
+### My invoices
+
+- View invoices.
+- Download invoice PDFs.
+- View payment history.
+- View paid and outstanding amounts.
+
+### My profile
+
+- View account information.
+- Update permitted profile fields.
+- Change password.
+
+All customer data must be scoped on the backend.
+
+A customer must never be able to access another customer's records by changing an ID in an API request.
+
+---
+
+# 15. REPORTS AND EXPORTS
+
+Implement useful business reports.
+
+Required reports:
+
+- Subscription report.
+- Customer report.
+- Invoice report.
+- Payment report.
+- Outstanding balance report.
+- Overdue invoice report.
+- Revenue report.
+- Discount usage report.
+- Tax report.
+- Billing execution report.
+
+Provide:
+
+- Date filters.
+- Relevant status filters.
+- Search.
+- Pagination.
+- CSV export.
+- Printable views.
+
+Reports must be calculated from the database, not from frontend-only values.
+
+Respect role permissions when generating reports.
+
+---
+
+# 16. PERFORMANCE OPTIMIZATION
+
+The original problem statement explicitly expects the application to remain responsive with thousands of subscriptions, targeting under two seconds per page.
+
+Improve the existing application to work towards this requirement.
+
+### Backend
+
+- Add database indexes for frequently filtered and joined fields.
+- Optimize SQLAlchemy queries.
+- Avoid unnecessary database queries.
+- Use pagination for large list endpoints.
+- Use appropriate eager loading.
+- Avoid N+1 query patterns.
+- Optimize analytics queries.
+- Add sensible date and status filters.
+- Review transaction boundaries.
+
+### Frontend
+
+- Avoid unnecessary API calls.
+- Implement pagination and search.
+- Use appropriate loading states.
+- Avoid repeatedly fetching unchanged data.
+- Optimize large tables and charts.
+- Reduce unnecessary component re-renders.
+- Review large production bundle chunks.
+
+### Performance testing
+
+Create a reproducible test dataset containing at least:
+
+- 5,000 subscriptions.
+- 1,000 customers.
+- 5,000 invoices.
+- Associated payment records.
+
+Run API performance tests against representative list, dashboard, analytics, and billing-preview endpoints.
+
+Measure:
+
+- Average response time.
+- Median response time.
+- 95th percentile response time.
+- Error rate.
+- Database query performance.
+
+Aim for the problem statement's under-two-second target.
+
+Do not claim the target is achieved unless the tests demonstrate it. If a particular endpoint exceeds the target, identify and optimize the bottleneck.
+
+Do not mix benchmark seed data with actual demonstration records.
+
+---
+
+# 17. FRONTEND UI/UX IMPROVEMENTS
+
+Make the application look and feel like a polished enterprise SaaS product.
+
+Do not unnecessarily change the existing branding or remove working pages.
+
+### Overall design
+
+- Consistent typography.
+- Professional colour palette.
+- Clear navigation.
+- Consistent spacing.
+- Reusable components.
+- Responsive layout.
+- Accessible colour contrast.
+- Consistent buttons and form controls.
+- Professional tables.
+- Consistent cards.
+- Clear status badges.
+- Proper confirmation dialogs.
+
+### Navigation
+
+Organize the sidebar into logical sections:
+
+**Overview**
+- Dashboard.
+
+**Business Management**
+- Customers.
+- Products.
+- Plans.
+- Quotations.
+- Templates.
+- Subscriptions.
+
+**Finance**
+- Billing Rehearsal.
+- Billing Runs.
+- Invoices.
+- Payments.
+- Discounts.
+- Taxes.
+
+**Intelligence**
+- Revenue Analytics.
+- Reports.
+- AI Finance Copilot.
+
+**Security**
+- Audit Center.
+- Security Alerts.
+
+**Administration**
+- Staff and Users.
+- Settings.
+
+Show only the routes permitted for the logged-in role.
+
+### Interaction improvements
+
+Every button must perform its advertised action.
+
+Every form must have:
+
+- Required-field validation.
+- Correct input types.
+- Clear error messages.
+- Success notifications.
+- Loading states.
+- Duplicate-submission prevention where appropriate.
+
+Every data table must have suitable:
+
+- Search.
+- Filters.
+- Sorting.
+- Pagination.
+- Empty states.
+- Loading states.
+- Error states.
+
+### Responsiveness
+
+Ensure the application works on:
+
+- Desktop.
+- Laptop.
+- Tablet.
+- Mobile.
+
+Do not leave incomplete pages or nonfunctional placeholder buttons.
+
+---
+
+# 18. DATABASE AND DATA INTEGRITY
+
+Review the existing SQLAlchemy models and database relationships.
+
+Ensure that:
+
+- Foreign keys are correct.
+- Unique constraints are present where required.
+- Financial records reference the correct customer and subscription.
+- Invoice numbers are unique.
+- Payment references are unique.
+- Subscription billing-period combinations cannot generate duplicate invoices.
+- Billing idempotency keys are unique.
+- Required fields have validation.
+- Historical invoice snapshots remain consistent.
+- Database transactions protect related financial writes.
+
+Use appropriate decimal or integer-based financial representations.
+
+Avoid floating-point rounding errors in monetary calculations.
+
+If schema modifications are required:
+
+1. Implement a safe migration strategy.
+2. Preserve existing data.
+3. Document schema changes.
+4. Test migrations on a copy of existing data.
+5. Never delete the existing database simply to make new models work.
+
+---
+
+# 19. TESTING AND QUALITY ASSURANCE
+
+Testing is mandatory.
+
+Do not stop after writing the code.
+
+### Backend tests
+
+Add or improve tests for:
+
+- Registration and login.
+- Password reset.
+- JWT validation.
+- Admin permissions.
+- Staff permissions.
+- Customer isolation.
+- Product creation.
+- Variant pricing.
+- Plan validation.
+- Quotation calculations.
+- Template-based quotations.
+- Subscription lifecycle transitions.
+- Billing simulation.
+- Billing execution.
+- Duplicate billing.
+- Concurrent billing attempts where practical.
+- Tax calculations.
+- Discount calculations.
+- Invoice creation.
+- Partial payments.
+- Overpayment rejection.
+- Payment reconciliation.
+- Audit-chain verification.
+- Security alert resolution.
+- AI query allowlisting.
+- AI customer isolation.
+- Report generation.
+
+### Frontend tests
+
+Add meaningful tests for:
+
+- Login and registration.
+- Role-based navigation.
+- Form validation.
+- Product and plan creation.
+- Quotation workflows.
+- Subscription workflows.
+- Billing simulation.
+- Invoice views.
+- Payment forms.
+- Customer portal.
+- AI assistant.
+- Dashboard data rendering.
+
+### End-to-end tests
+
+Verify complete business journeys:
+
+**Journey 1: New customer**
+
+Register → Login → View customer portal → View subscriptions.
+
+**Journey 2: New subscription**
+
+Admin creates product → Creates plan → Creates quotation → Converts quotation → Activates subscription.
+
+**Journey 3: Billing**
+
+Select billing period → Simulate → Review → Execute → Generate invoice.
+
+**Journey 4: Duplicate prevention**
+
+Execute billing → Repeat the same request → Verify no second invoice is created.
+
+**Journey 5: Payment reconciliation**
+
+Record partial payment → Check remaining balance → Record final payment → Verify PAID status.
+
+**Journey 6: Security**
+
+Perform financial operations → Open Audit Center → Verify hash chain → Confirm customer isolation.
+
+**Journey 7: AI finance**
+
+Ask finance questions → Verify correct results → Test fallback → Verify customer scoping.
+
+Run all tests after integration.
+
+---
+
+# 20. CONFIGURATION AND DEPLOYMENT READINESS
+
+Improve configuration handling.
+
+- Remove development-only secrets from production configurations.
+- Require a strong JWT secret outside development.
+- Keep API keys in environment variables.
+- Configure CORS correctly.
+- Ensure debug settings are disabled in production.
+- Review token expiration and password-reset token handling.
+- Review frontend token storage and XSS exposure.
+- Add clear startup instructions.
+- Add proper backend health checks.
+- Document database backup requirements.
+- Document how to reset demo data safely.
+- Ensure the application starts from a clean environment.
+
+Review dependencies and ensure all imported packages are declared in the appropriate requirements files.
+
+In particular, verify the optional scikit-learn dependency used by the anomaly-detection implementation.
+
+---
+
+# 21. IMPORTANT IMPLEMENTATION RULES
+
+Follow these rules throughout development.
+
+1. Do not rebuild the project from scratch.
+2. Do not remove working modules.
+3. Do not replace the existing Python FastAPI backend.
+4. Do not replace the existing React frontend.
+5. Do not create mock dashboards or fake analytics.
+6. Do not hardcode financial values.
+7. Do not create duplicate backend implementations of existing services.
+8. Do not introduce unnecessary dependencies.
+9. Do not break existing API contracts without updating every consumer.
+10. Do not trust frontend calculations for financial transactions.
+11. Do not bypass backend authentication or role checks.
+12. Do not allow AI-generated arbitrary SQL execution.
+13. Do not silently swallow exceptions.
+14. Do not leave nonfunctional buttons or placeholder screens.
+15. Do not claim a feature is completed until it has been tested.
+16. Do not delete or overwrite existing database records.
+17. Do not commit API keys, credentials, or secrets.
+18. Maintain clean, modular, documented code.
+19. Keep frontend and backend fully integrated.
+20. Preserve all existing tests and add regression coverage.
+
+If a feature is already implemented correctly, verify it and retain it instead of unnecessarily rewriting it.
+
+---
+
+# 22. FINAL ACCEPTANCE CHECKLIST
+
+The project is ready for final submission only after the following areas have been addressed and their status documented.
+
+### Core requirements
+
+- [ ] Authentication and registration.
+- [ ] Admin, Staff, and Customer roles.
+- [ ] Backend-enforced permissions.
+- [ ] Product and variant management.
+- [ ] Subscription plan management.
+- [ ] Quotation creation.
+- [ ] Quotation templates.
+- [ ] Subscription lifecycle.
+- [ ] Billing simulation.
+- [ ] Billing execution.
+- [ ] Automatic recurring billing.
+- [ ] Duplicate invoice prevention.
+- [ ] Invoice management.
+- [ ] PDF invoice generation.
+- [ ] Discount management.
+- [ ] Tax management.
+- [ ] Partial payment reconciliation.
+- [ ] Customer portal.
+- [ ] Revenue analytics.
+- [ ] Reports and exports.
+- [ ] AI Finance Copilot.
+- [ ] SHA-256 audit ledger.
+- [ ] Security alert management.
+- [ ] Performance testing.
+
+### Quality requirements
+
+- [ ] Backend tests passing.
+- [ ] Frontend tests passing.
+- [ ] Production frontend build passing.
+- [ ] Complete business workflows tested.
+- [ ] No critical frontend console errors.
+- [ ] No unresolved critical backend exceptions.
+- [ ] No broken API integrations.
+- [ ] No unauthorized customer data access.
+- [ ] No duplicate invoice generation.
+- [ ] Financial calculations validated.
+- [ ] Performance benchmarks documented.
+- [ ] Clean startup instructions verified.
+
+---
+
+# 23. FINAL DELIVERABLES
+
+After completing implementation, provide a detailed final report containing:
+
+### A. What existed before
+Summarize the original implementation.
+
+### B. What was modified
+List every major frontend, backend, database, and API change.
+
+### C. New features
+Clearly identify the newly implemented functionality.
+
+### D. Integration details
+Explain which frontend pages connect to which backend APIs and services.
+
+### E. Database changes
+List new models, fields, relationships, indexes, and constraints.
+
+### F. Testing results
+Provide actual test commands and results, including:
+- Backend test count.
+- Frontend test count.
+- End-to-end test results.
+- Production build status.
+- Performance test results.
+
+### G. Remaining limitations
+Clearly identify anything that is not implemented, not tested, or requires external configuration.
+
+### H. Run instructions
+Provide accurate commands to start the frontend and backend.
+
+### I. Final problem statement coverage
+Map every original problem statement requirement to:
+- Implemented.
+- Partially implemented.
+- Not implemented.
+
+### J. Submission readiness
+Provide an honest final assessment of whether the project is ready for hackathon submission.
+
+---
+
+# FINAL INSTRUCTION
+
+Work systematically, not superficially.
+
+Start by auditing the existing codebase. Then implement the missing features in dependency order, integrate the frontend and backend, run tests, fix regressions, and verify the complete application.
+
+Prioritize financial correctness, duplicate billing protection, backend security, customer isolation, auditability, and reliable subscription automation.
+
+The final outcome should be a fully integrated, demonstrable, professional subscription-management platform—not just a collection of attractive frontend pages.
+
+**The goal is to make SubSecure AI a billing-engine-first subscription platform where every important financial operation is validated, traceable, and reliable.**
+
+Do not stop at analysis or provide only an implementation plan. Make the actual code changes in the existing repository, run the relevant tests, and report honestly what has and has not been completed.
