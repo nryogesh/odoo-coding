@@ -1,0 +1,23 @@
+# Python environments and caches
+.venv/
+**/.venv/
+__pycache__/
+**/__pycache__/
+.pytest_cache/
+**/.pytest_cache/
+*.py[cod]
+
+# Local configuration and runtime data
+.env
+**/.env
+*.db
+**/*.db
+
+# Editor and generated task metadata
+.vscode/
+*.log
+
+# Build and distribution output
+dist/
+build/
+*.egg-info/
