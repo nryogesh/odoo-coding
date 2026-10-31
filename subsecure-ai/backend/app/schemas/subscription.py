@@ -14,6 +14,8 @@ class QuotationCreate(BaseModel):
     customer_id: int
     plan_id: int | None = None
     valid_until: date | None = None
+    tax_percent: Decimal = Field(default=Decimal("0"), ge=0, le=100)
+    discount_percent: Decimal = Field(default=Decimal("0"), ge=0, le=100)
     lines: list[QuotationLineIn] = Field(min_length=1)
 
 

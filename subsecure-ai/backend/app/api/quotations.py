@@ -80,13 +80,23 @@ def create_quotation(
     db.flush()
 
     quotation.subtotal = money(sum(l.quantity * l.unit_price for l in quotation.lines))
-    quotation.total = quotation.subtotal
+    quotation.discount_total = money(quotation.subtotal * payload.discount_percent / 100)
+    taxable = quotation.subtotal - quotation.discount_total
+    quotation.tax_total = money(taxable * payload.tax_percent / 100)
+    quotation.total = money(taxable + quotation.tax_total)
     audit_ledger.append_event(
         db,
         aggregate_type="quotation",
         aggregate_id=quotation.id,
         event_type="QuotationCreated",
-        payload={"quotation_number": quotation.quotation_number, "customer_id": quotation.customer_id},
+        payload={
+            "quotation_number": quotation.quotation_number,
+            "customer_id": quotation.customer_id,
+            "subtotal": quotation.subtotal,
+            "discount_total": quotation.discount_total,
+            "tax_total": quotation.tax_total,
+            "total": quotation.total,
+        },
         actor_user_id=user.id,
     )
     db.commit()
