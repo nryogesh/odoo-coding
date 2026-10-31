@@ -1,346 +1,524 @@
 # SubSecure AI
 
-### Intelligent, Secure & Tamper-Evident Subscription Management
+### Intelligent Subscription Management & Billing Platform
 
-SubSecure AI is a prototype subscription and recurring-revenue
-management platform. It is designed to simplify subscription operations
-while improving billing reliability, financial visibility and
-auditability.
+**SubSecure AI** is a subscription-management platform designed to help
+businesses manage the complete subscription lifecycle---from products
+and plans to quotations, recurring billing, invoices, payments, and
+revenue analytics.
 
-Our approach puts the **billing engine and financial event history at
-the centre of the system**. Instead of building only CRUD screens, the
-platform combines subscription lifecycle management, safe recurring
-billing, tamper-evident audit records, revenue intelligence and a
-controlled AI finance assistant.
+The project follows a **billing-engine-first architecture**: financial
+calculations and important state changes are handled by backend
+services, while an event-oriented audit ledger records key operations. A
+React frontend communicates with the backend through REST APIs.
 
-> **Project status:** Hackathon prototype. External payment processing,
-> production GST compliance, email delivery and external blockchain
-> anchoring must not be presented as completed unless they have actually
-> been integrated and tested.
+------------------------------------------------------------------------
 
-## 1. Problem Statement
+## Table of Contents
 
-Subscription platforms must coordinate products, plans, customers,
-quotations, recurring invoices, discounts, taxes, payments and revenue
-reports. These processes need to remain consistent even when billing
-jobs are retried or financial records are updated.
+-   [Key Features](#key-features)
+-   [Technology Stack](#technology-stack)
+-   [Architecture](#architecture)
+-   [Application Modules](#application-modules)
+-   [Core Workflows](#core-workflows)
+-   [Security and Reliability](#security-and-reliability)
+-   [Project Structure](#project-structure)
+-   [Getting Started](#getting-started)
+-   [Environment Configuration](#environment-configuration)
+-   [Demo Accounts](#demo-accounts)
+-   [Testing](#testing)
+-   [Current Implementation Status](#current-implementation-status)
+-   [Limitations and Future
+    Improvements](#limitations-and-future-improvements)
 
-A basic CRUD application may show the latest subscription status, but it
-may not explain the sequence of actions that produced it. Repeated
-billing jobs can also result in duplicate invoices if execution is not
-protected.
+------------------------------------------------------------------------
 
-SubSecure AI addresses these challenges through an event-oriented
-approach, idempotent billing, audit verification and revenue
-intelligence.
+## Key Features
 
-## 2. Our Approach
+-   **Subscription lifecycle management** -- Create subscriptions,
+    manage their status, apply lifecycle rules, and track billing dates.
+-   **Billing Day Rehearsal** -- Preview a billing period before
+    creating invoices. Review eligible subscriptions, expected totals,
+    taxes, discounts, warnings, and skipped items.
+-   **Recurring billing engine** -- Generate invoices for subscriptions
+    due in a selected billing period.
+-   **Duplicate billing protection** -- Use database-level uniqueness
+    and idempotency records to prevent duplicate invoices for the same
+    subscription and billing period.
+-   **Invoice and payment management** -- Track invoice totals, partial
+    payments, outstanding balances, and payment status.
+-   **Revenue intelligence** -- Calculate MRR, ARR, collected revenue,
+    outstanding revenue, overdue amounts, and churn-risk indicators.
+-   **Tamper-evident audit ledger** -- Link audit events using SHA-256
+    hashes and verify the integrity of the event chain.
+-   **AI Finance Copilot** -- Ask supported finance questions in natural
+    language. The backend uses constrained structured queries and fixed
+    ORM query builders rather than executing model-generated SQL.
+-   **Role-based access control** -- Support Admin, Staff, and Customer
+    roles, with customer data scoped on the backend.
+-   **Customer portal** -- Allow customers to view their own
+    subscriptions, invoices, payments, and balances.
 
-### 2.1 Billing-engine-first design
+## Technology Stack
 
-The billing workflow is treated as a core business capability. The
-platform supports recurring plans and a subscription lifecycle:
+  -----------------------------------------------------------------------
+  Layer                               Technologies
+  ----------------------------------- -----------------------------------
+  Frontend                            React 18, React Router, Vite
 
-`Draft → Quotation → Confirmed → Active → Closed`
+  Styling                             Tailwind CSS, PostCSS
 
-Additional lifecycle actions such as pause, renewal and expiry are
-supported where implemented.
+  Charts and visualisation            Recharts
 
-A billing rehearsal or dry-run previews the invoices before execution.
-Invoice generation uses an idempotency strategy so that repeating a
-billing operation does not create another invoice for the same
-subscription and billing period.
+  Icons                               lucide-react
 
-### 2.2 Event-oriented financial history
+  Backend                             Python, FastAPI, Uvicorn
 
-Important business actions are represented as events, such as:
+  Validation                          Pydantic v2
 
--   Subscription created or updated.
--   Quotation confirmed.
--   Invoice generated.
--   Payment received.
--   Discount applied.
--   Subscription paused or closed.
+  ORM                                 SQLAlchemy 2
 
-This provides a history of how financial records changed, rather than
-relying only on the latest state. Event history can coexist with
-relational models and read-oriented views used by normal screens and
-reports.
+  Database                            SQLite
 
-### 2.3 Tamper-evident audit ledger
+  Authentication                      JWT (PyJWT)
 
-Ledger events are linked using a SHA-256 hash chain. Each event hash
-incorporates the event data and the previous event hash:
+  Password hashing                    bcrypt via Passlib/bcrypt
 
-`H(n) = SHA256(Event(n) + H(n-1))`
+  AI integration                      Google Gemini API (optional),
+                                      deterministic fallback
 
-A verification process can detect changes to recorded events because the
-chain no longer matches.
+  Testing                             pytest, FastAPI TestClient, Node
+                                      test runner
+  -----------------------------------------------------------------------
 
-**Important:** A hash chain is tamper-evident, not automatically
-immutable. An attacker with sufficient access could potentially rewrite
-the complete chain. External anchoring can strengthen the design, but
-must only be described as implemented if an external anchoring service
-has actually been integrated.
-
-### 2.4 Safe and repeatable billing
-
-Recurring billing uses: - A stable idempotency key based on subscription
-and billing period. - Database uniqueness protection where applicable. -
-Transactional invoice creation. - Validation of payment amounts and
-outstanding balances. - Explicit handling of partial payments and
-overpayments.
-
-The goal is to prevent duplicate invoices and maintain consistent
-balances.
-
-### 2.5 Revenue intelligence
-
-The platform aims to provide visibility into: - Active subscriptions. -
-Collected revenue. - Outstanding and overdue amounts. - Monthly
-Recurring Revenue (MRR). - Annual Recurring Revenue (ARR). -
-Subscription growth and churn indicators. - Forecasts and risk signals
-where supported by available data.
-
-Recurring plan values are normalized to a monthly basis for MRR
-calculations. For example, an annual plan value is divided by 12.
-
-### 2.6 Controlled AI finance assistant
-
-The AI assistant is designed to answer natural-language questions about
-permitted business data, for example: - "How much revenue was collected
-this month?" - "Which invoices are overdue?" - "How many subscriptions
-are active?"
-
-The safe-query flow is:
-
-`Natural language → Structured query → Allowlist validation → Role and scope checks → Database query → Answer`
-
-The model must not receive unrestricted database access, execute
-arbitrary SQL or perform financial writes directly. The backend
-validates requested fields, operators and user permissions before
-retrieving data.
-
-Gemini integration requires a valid API key. If the external AI service
-is not configured, the application may use its documented fallback
-behaviour.
-
-### 2.7 Configurable rules
-
-A rule-based approach supports conditions such as discounts and
-percentage-based tax calculations. Rules use approved fields and
-operators rather than executing arbitrary code. Prototype
-percentage-based tax logic should not be treated as full statutory GST
-compliance.
-
-## 3. High-Level Architecture
+## Architecture
 
 ``` text
-              React Frontend (Vite + Tailwind)
-                           |
-                        REST API
-                           |
-                  FastAPI Backend
-             Authentication, RBAC, Validation
-                           |
-        +------------------+------------------+
-        |                  |                  |
-  Subscription         Billing &          Revenue
-    Services          Payment Engine     Intelligence
-        |                  |                  |
-        +------------------+------------------+
-                           |
-                  SQLite + SQLAlchemy
-                   Business Data/Events
-                           |
-                 SHA-256 Audit Verification
-
-           Optional integrations: Gemini API,
-                 ML anomaly detection
+┌─────────────────────────────────────────────┐
+│           React + Vite Frontend              │
+│                                             │
+│ Dashboard · Products · Plans · Quotations  │
+│ Subscriptions · Billing · Invoices         │
+│ Payments · Audit · Customer Portal · AI    │
+└──────────────────────┬──────────────────────┘
+                       │ REST API / JSON
+                       ▼
+┌─────────────────────────────────────────────┐
+│              FastAPI Backend                │
+│                                             │
+│ Authentication & RBAC                       │
+│ Subscription & Quotation Services           │
+│ Billing & Invoice Engine                    │
+│ Payment & Reconciliation                    │
+│ Revenue Analytics & Anomaly Indicators      │
+│ Audit Ledger & AI Finance Assistant         │
+└──────────────────────┬──────────────────────┘
+                       │ SQLAlchemy
+                       ▼
+┌─────────────────────────────────────────────┐
+│                 SQLite                      │
+│ Users · Customers · Products · Plans        │
+│ Subscriptions · Invoices · Payments         │
+│ Billing Idempotency · Audit Events          │
+└─────────────────────────────────────────────┘
 ```
 
-The frontend communicates with the backend through REST APIs. The
-backend owns authentication, authorization, validation, billing
-calculations and database operations. AI requests are mediated by the
-backend.
-
-## 4. Technology Stack
+## Application Modules
 
   -----------------------------------------------------------------------
-  Layer                   Technology              Purpose
-  ----------------------- ----------------------- -----------------------
-  Frontend                React, Vite             User interface
+  Module                              Description
+  ----------------------------------- -----------------------------------
+  Authentication                      Registration, login, current-user
+                                      lookup, JWT validation, and role
+                                      checks.
 
-  Styling                 Tailwind CSS            Responsive UI
+  Dashboard                           Displays subscription and financial
+                                      KPIs, activity, and churn
+                                      indicators.
 
-  Backend                 Python, FastAPI         REST API and business
-                                                  logic
+  Products                            Manage products, variants, and
+                                      pricing information.
 
-  Database                SQLite, SQLAlchemy      Prototype persistence
-                                                  and ORM
+  Plans                               Configure recurring prices, billing
+                                      intervals, minimum quantities, and
+                                      lifecycle permissions.
 
-  Validation              Pydantic                Request and response
-                                                  validation
+  Quotations                          Create quotations, calculate totals
+                                      on the server, and manage quotation
+                                      transitions.
 
-  Authentication          Password hashing, JWT   Authentication and
-                                                  authorization
+  Subscriptions                       Create and manage subscriptions,
+                                      lifecycle transitions, event
+                                      history, and state-at-time views.
 
-  Audit                   SHA-256                 Tamper-evident event
-                                                  verification
+  Billing Day Rehearsal               Simulate billing and preview
+                                      totals, eligible items, warnings,
+                                      and skipped subscriptions.
 
-  AI                      Gemini API (optional)   Natural-language
-                                                  finance queries
+  Billing Execution                   Revalidate and execute billing
+                                      runs, create invoices, and record
+                                      idempotency information.
 
-  ML                      scikit-learn (optional) Anomaly detection
-                                                  experiments
+  Invoices                            View invoice details, line items,
+                                      taxes, discounts, paid amounts, and
+                                      outstanding balances.
 
-  Testing                 pytest                  Backend testing
+  Payments                            Record payments and reconcile
+                                      partial or full invoice balances.
+
+  Audit & Security Center             View audit events, hash-chain
+                                      information, verification results,
+                                      and security alerts.
+
+  AI Finance Copilot                  Submit supported finance questions
+                                      and view structured results.
+
+  Customer Portal                     Show customers only their own
+                                      subscription, invoice, and payment
+                                      information.
+
+  Analytics                           Calculate MRR, ARR, collected
+                                      revenue, outstanding amounts,
+                                      overdue amounts, and risk
+                                      indicators.
   -----------------------------------------------------------------------
 
-The stack is intentionally lightweight for hackathon development and
-demonstration.
+## Core Workflows
 
-## 5. Core Modules
+### 1. Product and plan setup
 
-1.  **Authentication and roles** --- Admin, Staff and Customer access
-    with backend-enforced permissions.
-2.  **Products and plans** --- Product catalogue and recurring billing
-    intervals.
-3.  **Quotations and subscriptions** --- Subscription creation and
-    lifecycle management.
-4.  **Billing engine** --- Invoice generation, billing rehearsal and
-    duplicate-run protection.
-5.  **Payments** --- Payment recording, partial-payment handling and
-    balance reconciliation.
-6.  **Audit ledger** --- Event history and hash-chain verification.
-7.  **Revenue dashboard** --- Subscription, collection, outstanding and
-    recurring-revenue metrics.
-8.  **Risk indicators** --- Signals for potentially unusual or at-risk
-    subscriptions.
-9.  **AI finance assistant** --- Controlled natural-language access to
-    permitted financial information.
-10. **Customer portal** --- Customer access to their own subscriptions,
-    invoices and payment information.
+1.  An administrator signs in.
+2.  The administrator creates a product and, where applicable, its
+    variants.
+3.  A subscription plan is configured with pricing, billing interval,
+    minimum quantity, and lifecycle settings.
+4.  The backend validates and stores the records.
 
-The actual completion status of each module should be verified against
-the current source code and tests.
+### 2. Quotation to subscription
 
-## 6. Security and Reliability Principles
+1.  A quotation is created for a customer with product lines.
+2.  The backend calculates subtotal, discounts, taxes, and total.
+3.  The quotation moves through its permitted lifecycle transitions.
+4.  An eligible quotation can be converted into a subscription.
+5.  The subscription service sets billing dates and records lifecycle
+    events.
 
--   Enforce permissions in backend endpoints, not only by hiding
-    frontend controls.
--   Restrict customers to their own records.
--   Hash passwords; never store plaintext passwords.
--   Keep API keys in environment variables and out of source control.
--   Validate and constrain AI-generated query structures.
--   Use parameterized ORM/database operations.
--   Protect recurring invoice creation with idempotency and database
-    constraints.
--   Validate payment amounts and reject invalid overpayments.
--   Use transactions for financial operations.
--   Treat audit verification as tamper detection, not proof of absolute
-    immutability.
--   Do not claim external payment, email or blockchain capabilities
-    unless integrated and tested.
+### 3. Billing simulation and execution
 
-## 7. Running the Project
+1.  A billing period is submitted to the billing simulation endpoint.
+2.  The engine checks subscription status, due dates, expiry, lines, and
+    previous billing records.
+3.  It calculates expected invoice amounts and reports warnings or
+    skipped items.
+4.  The user reviews the preview before execution.
+5.  On confirmation, the backend revalidates eligibility and creates
+    invoices within transaction scopes.
+6.  Idempotency records and database constraints prevent a second
+    invoice for the same subscription and billing period.
 
-The following commands reflect the expected backend setup. Run them from
-the project root and adjust paths if the repository structure differs.
+**Simulation is a preview:** it does not create invoices.
+
+### 4. Payment and reconciliation
+
+1.  A payment is recorded against an invoice.
+2.  The backend calculates the total paid amount and remaining balance.
+3.  Partial payments leave the invoice partially paid or outstanding.
+4.  Overpayments are rejected.
+5.  The invoice is marked paid only when the full amount is covered.
+
+### 5. Audit verification
+
+1.  Important financial and lifecycle operations append audit events.
+2.  Each event stores its own hash and the previous event's hash.
+3.  The Audit Center displays the event history.
+4.  The verification endpoint checks sequence ordering, previous-hash
+    links, and recomputed hashes.
+5.  A modified event or broken link can be detected.
+
+### 6. AI Finance Copilot
+
+1.  A user submits a finance question.
+2.  If configured and available, Gemini can translate the question into
+    a constrained structured query.
+3.  The backend validates the query against allowlists.
+4.  Fixed ORM query builders execute the request with role and customer
+    scope.
+5.  If Gemini is unavailable, supported questions can be answered
+    through a deterministic fallback.
+
+The assistant is read-only: it does not create invoices, collect
+payments, or modify financial records.
+
+## Security and Reliability
+
+-   Passwords are stored as bcrypt hashes.
+-   Protected API routes validate JWTs and reject inactive users.
+-   Backend role checks enforce Admin, Staff, and Customer permissions.
+-   Only an administrator can create staff accounts.
+-   Customer records are scoped using the authenticated user's customer
+    association.
+-   AI query representations use allowlists for entities, fields,
+    operators, periods, and limits.
+-   AI output is not executed as SQL or Python.
+-   Billing uses database-level uniqueness and idempotency records to
+    reduce duplicate invoice risk.
+-   Financial calculations are performed by backend services rather than
+    trusting frontend totals.
+-   Audit events are connected through a SHA-256 hash chain.
+
+## Project Structure
+
+The repository is organised into separate frontend and backend
+applications:
+
+``` text
+project-root/
+├── subsecure-ai/
+│   └── backend/
+│       ├── app/
+│       │   ├── api/          # FastAPI route modules
+│       │   ├── models/       # SQLAlchemy models
+│       │   ├── schemas/      # Pydantic schemas
+│       │   ├── security/     # Authentication and access control
+│       │   ├── services/     # Billing, audit, revenue, AI services
+│       │   └── ...
+│       ├── tests/            # Backend tests
+│       ├── requirements.txt
+│       └── ...
+└── subsecure-frontend/
+    ├── src/
+    │   ├── pages/            # Application pages
+    │   ├── services/         # API and service integrations
+    │   ├── components/       # Reusable UI components
+    │   └── ...
+    ├── tests/
+    ├── package.json
+    └── ...
+```
+
+*The exact folder names may vary slightly depending on the checked-out
+repository version.*
+
+## Getting Started
+
+### Prerequisites
+
+-   Python 3.10 or later
+-   Node.js and npm
+-   Git
+
+### 1. Clone the repository
 
 ``` bash
-cd backend
+git clone <YOUR_REPOSITORY_URL>
+cd <YOUR_REPOSITORY_FOLDER>
+```
+
+### 2. Set up the backend
+
+Open a terminal:
+
+``` powershell
+cd subsecure-ai/backend
+
+python -m venv .venv
+.\.venv\Scripts\Activate.ps1
+
 pip install -r requirements.txt
-cp .env.example .env
-
-# Seed demo data only if you are not using the included database
-python -m app.seed.seed_demo
-
-# Start the API
-uvicorn app.main:app --reload
+Copy-Item .env.example .env
 ```
 
-FastAPI documentation is normally available at
-`http://localhost:8000/docs`.
+Edit the `.env` file and configure the required environment variables.
+Then initialise demo data and start the API:
 
-Run backend tests:
+``` powershell
+python -m app.seed.seed_demo
+uvicorn app.main:app --reload --host 127.0.0.1 --port 8000
+```
+
+The backend health endpoint is:
+
+``` text
+http://localhost:8000/health
+```
+
+Interactive API documentation:
+
+``` text
+http://localhost:8000/docs
+```
+
+### 3. Set up the frontend
+
+Open a second terminal:
+
+``` powershell
+cd subsecure-frontend
+
+npm install
+Copy-Item .env.example .env
+npm run dev -- --host 127.0.0.1 --port 5173
+```
+
+Open the application at:
+
+``` text
+http://localhost:5173
+```
+
+The Vite development proxy forwards `/api` requests to the backend at
+`http://localhost:8000`.
+
+## Environment Configuration
+
+Configure secrets and service settings in the backend `.env` file. Use
+the variable names provided by the repository's `.env.example`.
+
+Typical configuration includes:
+
+  -----------------------------------------------------------------------
+  Variable                            Purpose
+  ----------------------------------- -----------------------------------
+  `DATABASE_URL`                      SQLAlchemy database connection
+                                      string. Defaults to a local SQLite
+                                      database.
+
+  `JWT_SECRET`                        Secret used to sign and validate
+                                      JWTs. Use a strong random value.
+
+  `CORS_ORIGINS`                      Allowed frontend origins.
+
+  `GEMINI_API_KEY`                    Optional key for live Gemini
+                                      integration.
+  -----------------------------------------------------------------------
+
+For the frontend, configure `VITE_API_BASE_URL` if the API is not
+accessed through the default `/api/v1` proxy path.
+
+**Never commit real API keys, database credentials, or production
+secrets to Git.** Use a strong `JWT_SECRET` outside local development.
+
+## Demo Accounts
+
+The local seed script provides the following demo accounts:
+
+  Role       Email                   Password
+  ---------- ----------------------- ------------------
+  Admin      `admin@brightloop.io`   `Admin@12345`
+  Staff      `staff@brightloop.io`   `Staff@12345`
+  Customer   `customer@acme.io`      `Customer@12345`
+
+These credentials are for local demonstration only. Change or remove
+them before any shared or production deployment.
+
+## Testing
+
+### Backend tests
+
+``` powershell
+cd subsecure-ai/backend
+.\.venv\Scripts\Activate.ps1
+python -m pytest -q
+```
+
+The implementation audit recorded **35 backend tests passing**. Coverage
+includes authentication, role permissions, customer isolation, billing,
+duplicate prevention, audit-chain verification, AI
+fallback/allowlisting, and regression cases.
+
+### Frontend tests
 
 ``` bash
-pytest tests/ -q
+cd subsecure-frontend
+npm test
 ```
 
-Start the frontend in a separate terminal using the commands in its
-`package.json` (commonly `npm install` followed by `npm run dev`).
+The implementation audit recorded **1 frontend smoke test passing**.
+This is a limited smoke test, not comprehensive component or end-to-end
+coverage.
 
-### Environment variables
+### Production build
 
-Configure the variables documented in `.env.example`. Gemini
-functionality requires a valid `GEMINI_API_KEY`. Never commit real
-credentials to the repository.
+``` bash
+npm run build
+```
 
-### Demo accounts
+The implementation audit recorded a successful Vite production build.
 
-Use the demo accounts documented in the project setup notes if the
-seeded database and credentials are present. Change demo passwords
-before any non-demo deployment.
+## Current Implementation Status
 
-## 8. Testing and Verification
+The following status reflects the implementation audit, not a claim that
+every workflow has been fully acceptance-tested.
 
-Important scenarios to validate include:
+### Implemented and evidenced
 
--   Repeated billing attempts do not create duplicate invoices.
--   Ledger verification detects controlled changes to recorded events.
--   Customers cannot access another customer's records.
--   Staff cannot perform Admin-only actions.
--   Discounts and tax are applied in the correct order.
--   Partial payments preserve the correct outstanding balance.
--   An invoice is marked paid only when its balance is fully covered.
--   Invalid overpayments are rejected.
--   Unsupported AI fields and operators are rejected.
--   AI queries respect role permissions and customer data scope.
+-   FastAPI startup, SQLite initialisation, and health endpoint.
+-   Password hashing, JWT authentication, and backend role checks.
+-   Customer-scoped access to subscriptions, invoices, and payments.
+-   Product, variant, plan, quotation, and subscription backend
+    operations.
+-   Server-side quotation calculations.
+-   Billing simulation and transaction-scoped invoice generation.
+-   Database-level duplicate billing protection.
+-   Partial-payment balance calculation and overpayment rejection.
+-   SHA-256 audit ledger and verification endpoint.
+-   Structured JSON rule validation.
+-   MRR, ARR, collected, outstanding, and overdue metrics.
+-   Deterministic churn/anomaly indicators.
+-   Frontend API integration for the main application modules.
+-   Deterministic AI fallback with restricted ORM query execution.
 
-Only report test counts and successful scenarios that have actually been
-run against the current codebase.
+### Partially implemented or requiring further verification
 
-## 9. Prototype Scope and Limitations
+-   Live Gemini mode requires a valid `GEMINI_API_KEY` and has not been
+    verified in the audit.
+-   The optional Isolation Forest path requires a dependency review;
+    scikit-learn was not listed in the inspected requirements file.
+-   There is no distinct staff-specific dashboard experience.
+-   The revenue-trend chart does not currently have a populated backend
+    data series.
+-   Rule management does not have a complete authoring UI/CRUD workflow.
+-   A complete security-alert resolution workflow was not identified.
+-   Full browser-based billing execution was not manually completed
+    during the audit.
+-   Frontend automated test coverage is minimal.
+-   Multi-worker concurrency and load testing have not been completed.
 
-SubSecure AI is a hackathon prototype. Potential limitations to disclose
-unless subsequently implemented and verified:
+### Not included in the current prototype
 
--   No real email delivery or password-reset email service.
--   No live payment gateway; payment entries may be simulated.
--   Percentage-based prototype tax rules are not equivalent to GST
-    compliance.
--   SHA-256 chaining detects tampering but does not independently
-    guarantee immutability.
--   External blockchain anchoring is an extension unless actually
-    connected.
--   Gemini functionality depends on a configured API key; fallback
-    behaviour may be available.
--   ML anomaly detection is an indicator, not proof of fraud.
--   SQLite is suitable for a prototype but may need a production
-    database and deployment architecture at larger scale.
+-   External payment gateway integration and payment webhooks.
+-   Email delivery and password reset.
+-   External blockchain or ledger anchoring.
+-   Production deployment infrastructure and managed database
+    migrations.
+-   Comprehensive frontend end-to-end testing.
 
-## 10. Future Enhancements
+## Limitations and Future Improvements
 
--   Integrate a real payment gateway and verified payment webhooks.
--   Add email notifications and secure password-reset flows.
--   Implement compliant tax configuration and invoice requirements for
-    target jurisdictions.
--   Anchor periodic ledger checkpoints to an external trusted system.
--   Add production-grade scheduling, retries, monitoring and billing
-    reconciliation.
--   Evaluate anomaly detection using representative, validated datasets.
--   Move to a production database and add load/performance testing.
--   Add stronger observability, backups and operational controls.
+1.  Add a complete password-reset and email-delivery workflow.
+2.  Add a dedicated staff dashboard and complete staff-specific
+    workflows.
+3.  Build administration screens for creating and managing tax and
+    discount rules.
+4.  Add a populated revenue-trend API and complete reporting views.
+5.  Add a security-alert resolution workflow.
+6.  Add comprehensive frontend and end-to-end tests.
+7.  Perform concurrency and load testing, including the problem
+    statement's 5,000+ subscription scenario and sub-two-second response
+    target.
+8.  Configure and verify live Gemini integration if it is required for
+    the demonstration.
+9.  Integrate a real payment provider and webhook handling.
+10. Prepare production configuration, database migrations, deployment,
+    and secret management.
 
-## 11. Project Vision
+------------------------------------------------------------------------
 
-SubSecure AI aims to make subscription management more than a system
-that creates plans and invoices. It combines a reliable billing
-workflow, explainable financial history, tamper-evident audit records
-and accessible revenue intelligence.
+## Project Goal
 
-**Our central idea: every financial action should be traceable, every
-billing run should be safe to repeat, and every business insight should
-be permission-controlled.**
+SubSecure AI aims to make subscription operations more reliable and
+transparent by combining recurring billing, financial reconciliation,
+revenue intelligence, role-based access, and verifiable audit history in
+one platform.
+
+**Built with React, FastAPI, SQLAlchemy, and SQLite.**
