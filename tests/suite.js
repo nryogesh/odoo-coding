@@ -189,6 +189,12 @@ async function runAllTests() {
   const odooVariant = crmProd?.variants.find((v) => v.name === 'Odoo Brand')
   assert('Odoo Brand variant has correct price adjustment (+₹560)', odooVariant && odooVariant.price_adjustment === 560)
 
+  // Product validation checks
+  const badProd1 = await req('POST', '/products', { name: 'Bad Negative Price', sales_price: -100 }, adminToken)
+  assert('Product with negative price rejected with HTTP 400', badProd1.status === 400)
+  const badProd2 = await req('POST', '/products', { name: '', sales_price: 500 }, adminToken)
+  assert('Product with empty name rejected with HTTP 400', badProd2.status === 400)
+
   // --- PHASE 5: PLANS & RESTRICTIONS ---
   console.log('\n--- 4. PLANS & RESTRICTIONS ---')
 
@@ -197,6 +203,12 @@ async function runAllTests() {
     plans.status === 200 &&
     ['DAILY', 'WEEKLY', 'MONTHLY', 'YEARLY'].every((iv) => plans.data.some((p) => p.billing_interval === iv))
   )
+
+  // Plan validation checks
+  const badPlan1 = await req('POST', '/plans', { name: 'Invalid Interval', product_id: 1, price: 1000, billing_interval: 'HOURLY' }, adminToken)
+  assert('Plan with invalid interval rejected with HTTP 400', badPlan1.status === 400)
+  const badPlan2 = await req('POST', '/plans', { name: 'Bad Product Ref', product_id: 999999, price: 1000, billing_interval: 'MONTHLY' }, adminToken)
+  assert('Plan referencing non-existent product rejected with HTTP 400', badPlan2.status === 400)
 
   // Pause restriction enforcement
   const pauseBlocked = await req('POST', '/subscriptions/2/transition', { action: 'pause' }, adminToken)
@@ -239,6 +251,10 @@ async function runAllTests() {
   // Convert quotation to Active Subscription
   const convertQuote = await req('POST', `/quotations/${createQuote.data.id}/transition`, { action: 'convert' }, staffToken)
   assert('Quotation converted to ACTIVE Subscription', convertQuote.status === 200 && convertQuote.data.status === 'ACTIVE' && convertQuote.data.subscription_number)
+
+  // Prevent duplicate quotation conversion
+  const dupConvert = await req('POST', `/quotations/${createQuote.data.id}/transition`, { action: 'convert' }, staffToken)
+  assert('Duplicate quotation conversion rejected with HTTP 400', dupConvert.status === 400 && dupConvert.data.detail.includes('already been converted'))
 
   // --- PHASE 7: RECURRING BILLING ENGINE & IDEMPOTENCY ---
   console.log('\n--- 6. BILLING REHEARSAL & IDEMPOTENCY LOCKS ---')

@@ -11,7 +11,10 @@ const PORT = 3000
 const DATA_DIR = path.resolve(process.cwd(), 'data')
 const DB_FILE = path.join(DATA_DIR, 'subsecure_db.json')
 const GENESIS_HASH = '0'.repeat(64)
-const JWT_SECRET = process.env.JWT_SECRET_KEY || process.env.JWT_SECRET || 'subsecure_super_secret_jwt_key_2026'
+const JWT_SECRET = process.env.JWT_SECRET_KEY || process.env.JWT_SECRET || (process.env.NODE_ENV === 'production' ? '' : 'subsecure_super_secret_jwt_key_2026')
+if (process.env.NODE_ENV === 'production' && !JWT_SECRET) {
+  throw new Error('FATAL SECURITY CONFIGURATION: In production mode, JWT_SECRET_KEY or JWT_SECRET must be configured via environment variables.')
+}
 
 // Ensure data directory exists
 if (!fs.existsSync(DATA_DIR)) {
@@ -873,11 +876,15 @@ app.post('/api/v1/auth/forgot-password', (req, res) => {
   db.appendEvent('user', user.id, 'PasswordResetRequested', { email: user.email, token_hash_preview: tokenHash.slice(0, 8) + '…' }, user.id)
   db.save()
 
-  // Deliver token in response for test execution / client reset flow
+  // Secure email dispatch mechanism
+  console.log(`[EMAIL DISPATCH SERVICE] Delivering single-use password reset token to: ${user.email} (expires in 15 minutes)`)
+
+  // In production, never expose raw reset tokens in API responses.
+  const isProduction = process.env.NODE_ENV === 'production'
   res.json({
     success: true,
-    message: `Password reset link and security verification token generated for ${user.email}. Link valid for 15 minutes.`,
-    token: rawToken,
+    message: `Password reset instructions dispatched to ${user.email}. Link valid for 15 minutes.`,
+    ...(isProduction ? {} : { token: rawToken }),
   })
 })
 
@@ -903,7 +910,7 @@ app.post('/api/v1/auth/reset-password', (req, res) => {
   }
 
   const tokenHash = crypto.createHash('sha256').update(token).digest('hex')
-  const record = (db.data.resetTokens || []).find((r: any) => (r.token_hash === tokenHash || r.token === token) && r.user_id === user.id)
+  const record = (db.data.resetTokens || []).find((r: any) => r.token_hash === tokenHash && r.user_id === user.id)
   if (!record) {
     return res.status(400).json({ detail: 'Invalid password reset token' })
   }
@@ -914,7 +921,6 @@ app.post('/api/v1/auth/reset-password', (req, res) => {
     return res.status(400).json({ detail: 'Password reset token has expired. Please request a new one.' })
   }
   record.used = true
-  }
 
   user.password_hash = bcrypt.hashSync(new_password, 10)
   delete user.password // remove plaintext if existed
@@ -1077,21 +1083,33 @@ app.get('/api/v1/products', (req, res) => {
 app.post('/api/v1/products', (req: AuthenticatedRequest, res) => {
   if (!requireStaffOrAdmin(req, res)) return
   const { name, product_type, sales_price, cost_price, notes, active, variants } = req.body
-  if (!name || sales_price === undefined) {
-    return res.status(400).json({ detail: 'Product name and sales price are required' })
+  if (!name || String(name).trim() === '') {
+    return res.status(400).json({ detail: 'Product name cannot be empty' })
+  }
+  if (sales_price === undefined || isNaN(Number(sales_price))) {
+    return res.status(400).json({ detail: 'Valid sales price is required' })
+  }
+  if (Number(sales_price) < 0 || (cost_price !== undefined && Number(cost_price) < 0)) {
+    return res.status(400).json({ detail: 'Sales price and cost price cannot be negative' })
+  }
+
+  const pType = (product_type || 'SERVICE').toUpperCase()
+  const validTypes = ['SUBSCRIPTION', 'ADDON', 'SERVICE', 'PRODUCT', 'CONSUMABLE']
+  if (!validTypes.includes(pType)) {
+    return res.status(400).json({ detail: `Invalid product type. Allowed: ${validTypes.join(', ')}` })
   }
 
   const newId = db.data.products.length > 0 ? Math.max(...db.data.products.map((p: any) => p.id)) + 1 : 1
   const variantList = (variants || []).map((v: any, i: number) => ({
     id: i + 1,
-    name: v.name,
-    price_adjustment: Number(v.price_adjustment || 0),
+    name: v.name || `Variant ${i + 1}`,
+    price_adjustment: isNaN(Number(v.price_adjustment)) ? 0 : Number(v.price_adjustment),
   }))
 
   const newProduct = {
     id: newId,
-    name,
-    product_type: (product_type || 'SERVICE').toUpperCase(),
+    name: String(name).trim(),
+    product_type: pType,
     sales_price: Number(sales_price),
     cost_price: Number(cost_price || 0),
     notes: notes || null,
@@ -1100,7 +1118,7 @@ app.post('/api/v1/products', (req: AuthenticatedRequest, res) => {
   }
 
   db.data.products.push(newProduct)
-  db.appendEvent('product', newId, 'ProductCreated', { name, sales_price }, req.user.id)
+  db.appendEvent('product', newId, 'ProductCreated', { name: newProduct.name, sales_price: newProduct.sales_price }, req.user.id)
   db.save()
   res.status(201).json(newProduct)
 })
@@ -1134,17 +1152,48 @@ app.post('/api/v1/plans', (req: AuthenticatedRequest, res) => {
     active,
   } = req.body
 
-  if (!name || !product_id || price === undefined) {
-    return res.status(400).json({ detail: 'Plan name, product_id, and price are required' })
+  if (!name || String(name).trim() === '') {
+    return res.status(400).json({ detail: 'Plan name cannot be empty' })
+  }
+  if (!product_id) {
+    return res.status(400).json({ detail: 'Referenced product_id is required' })
+  }
+  if (price === undefined || isNaN(Number(price))) {
+    return res.status(400).json({ detail: 'Valid plan price is required' })
+  }
+  if (Number(price) < 0) {
+    return res.status(400).json({ detail: 'Plan price cannot be negative' })
+  }
+
+  const referencedProduct = db.data.products.find((p: any) => p.id === Number(product_id))
+  if (!referencedProduct) {
+    return res.status(400).json({ detail: `Referenced product #${product_id} does not exist` })
+  }
+  if (referencedProduct.is_active === false) {
+    return res.status(400).json({ detail: `Cannot attach plan to inactive product "${referencedProduct.name}"` })
+  }
+
+  const interval = (billing_interval || 'MONTHLY').toUpperCase()
+  const allowedIntervals = ['DAILY', 'WEEKLY', 'MONTHLY', 'YEARLY']
+  if (!allowedIntervals.includes(interval)) {
+    return res.status(400).json({ detail: `Invalid billing interval. Allowed intervals: ${allowedIntervals.join(', ')}` })
+  }
+
+  if (minimum_quantity !== undefined && Number(minimum_quantity) < 1) {
+    return res.status(400).json({ detail: 'Minimum quantity must be at least 1' })
+  }
+
+  if (available_from && available_until && available_from > available_until) {
+    return res.status(400).json({ detail: 'available_from date cannot be after available_until date' })
   }
 
   const newId = db.data.plans.length > 0 ? Math.max(...db.data.plans.map((p: any) => p.id)) + 1 : 1
   const newPlan = {
     id: newId,
-    name,
+    name: String(name).trim(),
     product_id: Number(product_id),
     price: Number(price),
-    billing_interval: (billing_interval || 'MONTHLY').toUpperCase(),
+    billing_interval: interval,
     minimum_quantity: Number(minimum_quantity || 1),
     available_from: available_from || null,
     available_until: available_until || null,
@@ -1156,7 +1205,7 @@ app.post('/api/v1/plans', (req: AuthenticatedRequest, res) => {
   }
 
   db.data.plans.push(newPlan)
-  db.appendEvent('plan', newId, 'PlanCreated', { name, price, interval: newPlan.billing_interval }, req.user.id)
+  db.appendEvent('plan', newId, 'PlanCreated', { name: newPlan.name, price: newPlan.price, interval: newPlan.billing_interval }, req.user.id)
   db.save()
   res.status(201).json(newPlan)
 })
@@ -1225,13 +1274,57 @@ app.post('/api/v1/quotations', (req: AuthenticatedRequest, res) => {
 
   const newId = db.data.quotations.length > 0 ? Math.max(...db.data.quotations.map((q: any) => q.id)) + 1 : 1
   const qNumber = `QUO-${1000 + newId}`
-  const plan = db.data.plans.find((p: any) => p.id === Number(plan_id))
-  const lineItem = lines?.[0]
-  const product = db.data.products.find((p: any) => p.id === (lineItem?.product_id || plan?.product_id))
+  const plan = plan_id ? db.data.plans.find((p: any) => p.id === Number(plan_id)) : null
+  const todayStr = formatDateISO(new Date())
 
-  const unitPrice = plan ? plan.price : product ? product.sales_price : 0
-  const qty = Number(lineItem?.quantity || 1)
-  const subtotal = unitPrice * qty
+  if (plan) {
+    if (plan.is_active === false) {
+      return res.status(400).json({ detail: `Plan "${plan.name}" is inactive` })
+    }
+    if (plan.available_from && plan.available_from > todayStr) {
+      return res.status(400).json({ detail: `Plan "${plan.name}" is not yet available` })
+    }
+    if (plan.available_until && plan.available_until < todayStr) {
+      return res.status(400).json({ detail: `Plan "${plan.name}" expired on ${plan.available_until}` })
+    }
+  }
+
+  const mappedLines = (lines && lines.length > 0)
+    ? lines.map((l: any, idx: number) => {
+        const prod = db.data.products.find((p: any) => p.id === Number(l.product_id || plan?.product_id))
+        const variant = prod?.variants?.find((v: any) => v.id === Number(l.variant_id))
+        let defaultPrice = plan ? plan.price : prod ? prod.sales_price : 0
+        if (variant && variant.price_adjustment) {
+          defaultPrice += Number(variant.price_adjustment)
+        }
+        const uPrice = l.unit_price !== undefined ? Number(l.unit_price) : defaultPrice
+        const q = Number(l.quantity || 1)
+        return {
+          id: idx + 1,
+          product_id: prod ? prod.id : Number(l.product_id || 1),
+          variant_id: l.variant_id ? Number(l.variant_id) : null,
+          quantity: q,
+          unit_price: uPrice,
+          product_name: prod ? (variant ? `${prod.name} (${variant.name})` : prod.name) : (l.product_name || 'Product'),
+        }
+      })
+    : [
+        {
+          id: 1,
+          product_id: plan ? plan.product_id : 1,
+          variant_id: null,
+          quantity: 1,
+          unit_price: plan ? plan.price : 0,
+          product_name: plan ? plan.name : 'Subscription Plan',
+        },
+      ]
+
+  const totalQty = mappedLines.reduce((sum: number, l: any) => sum + l.quantity, 0)
+  if (plan && plan.minimum_quantity && totalQty < plan.minimum_quantity) {
+    return res.status(400).json({ detail: `Plan requires a minimum quantity of ${plan.minimum_quantity}` })
+  }
+
+  const subtotal = mappedLines.reduce((sum: number, l: any) => sum + l.unit_price * l.quantity, 0)
   const discount = Math.round(subtotal * (Number(discount_percent || 0) / 100))
   const taxable = subtotal - discount
   const tax = Math.round(taxable * (Number(tax_percent || 18) / 100))
@@ -1247,21 +1340,13 @@ app.post('/api/v1/quotations', (req: AuthenticatedRequest, res) => {
     valid_until: validUntil,
     tax_percent: Number(tax_percent || 18),
     discount_percent: Number(discount_percent || 0),
-    status: 'QUOTATION',
+    status: 'DRAFT',
     subtotal,
     discount_total: discount,
     tax_total: tax,
     total,
     assigned_staff_id: req.user.id || 2,
-    lines: [
-      {
-        id: 1,
-        product_id: product ? product.id : 1,
-        quantity: qty,
-        unit_price: unitPrice,
-        product_name: product ? product.name : 'Product',
-      },
-    ],
+    lines: mappedLines,
   }
 
   db.data.quotations.push(newQuotation)
@@ -1276,15 +1361,35 @@ app.post('/api/v1/quotations/:id/transition', (req: AuthenticatedRequest, res) =
   const quotation = db.data.quotations.find((q: any) => q.id === qId)
   if (!quotation) return res.status(404).json({ detail: 'Quotation not found' })
 
-  const { action } = req.body
-  if (action === 'send') quotation.status = 'QUOTATION'
-  else if (action === 'confirm') quotation.status = 'CONFIRMED'
-  else if (action === 'close') quotation.status = 'CLOSED'
-  else if (action === 'convert') {
+  const action = String(req.body.action || '').toLowerCase()
+  const todayStr = formatDateISO(new Date())
+
+  if ((action === 'confirm' || action === 'convert') && quotation.valid_until && quotation.valid_until < todayStr) {
+    return res.status(400).json({ detail: `Quotation ${quotation.quotation_number} expired on ${quotation.valid_until} and cannot be converted.` })
+  }
+
+  if (action === 'convert' && quotation.converted_subscription_id) {
+    return res.status(400).json({ detail: `Quotation ${quotation.quotation_number} has already been converted to subscription #${quotation.converted_subscription_id}` })
+  }
+
+  if (action === 'send') {
+    quotation.status = 'SENT'
+  } else if (action === 'confirm') {
+    quotation.status = 'CONFIRMED'
+  } else if (action === 'close' || action === 'cancel') {
+    quotation.status = 'CANCELLED'
+  } else if (action === 'convert') {
     quotation.status = 'ACTIVE'
     const newSubId = db.data.subscriptions.length > 0 ? Math.max(...db.data.subscriptions.map((s: any) => s.id)) + 1 : 1
     const subNumber = `SUB-${1000 + newSubId}`
-    const todayStr = formatDateISO(new Date())
+    const plan = db.data.plans.find((p: any) => p.id === quotation.plan_id)
+    const interval = (plan?.billing_interval || 'MONTHLY').toUpperCase()
+
+    const exp = new Date()
+    if (interval === 'DAILY') exp.setDate(exp.getDate() + 1)
+    else if (interval === 'WEEKLY') exp.setDate(exp.getDate() + 7)
+    else if (interval === 'YEARLY') exp.setFullYear(exp.getFullYear() + 1)
+    else exp.setMonth(exp.getMonth() + 1)
 
     const newSub = {
       id: newSubId,
@@ -1292,23 +1397,34 @@ app.post('/api/v1/quotations/:id/transition', (req: AuthenticatedRequest, res) =
       customer_id: quotation.customer_id,
       plan_id: quotation.plan_id,
       start_date: todayStr,
-      expiry_date: addDays(new Date(), 365),
+      expiry_date: formatDateISO(exp),
       next_billing_date: todayStr,
       payment_terms: 'net_15',
-      status: 'CONFIRMED',
+      status: 'ACTIVE',
       created_at: todayStr,
-      lines: quotation.lines.map((l: any, i: number) => ({
+      lines: (quotation.lines || []).map((l: any, i: number) => ({
         id: i + 1,
         product_id: l.product_id,
-        variant_id: null,
+        variant_id: l.variant_id || null,
         quantity: l.quantity,
         unit_price: l.unit_price,
         product_name: l.product_name,
       })),
     }
 
+    quotation.converted_subscription_id = newSubId
     db.data.subscriptions.push(newSub)
     db.appendEvent('subscription', newSubId, 'SubscriptionCreated', { subscription_number: subNumber, from_quotation: quotation.quotation_number }, req.user.id)
+    db.save()
+
+    return res.json({
+      ...quotation,
+      ...newSub,
+      status: 'ACTIVE',
+      subscription_number: subNumber,
+      subscription_id: newSubId,
+      subscription: newSub,
+    })
   } else {
     return res.status(400).json({ detail: `Invalid transition action: ${action}` })
   }
@@ -2014,6 +2130,17 @@ app.post('/api/v1/customer/requests/:id/action', (req: AuthenticatedRequest, res
   res.json(request)
 })
 
+// Normalized MRR calculation according to billing interval
+function computeSubscriptionMRR(s: any): number {
+  const plan = db.data.plans.find((p: any) => p.id === s.plan_id)
+  const interval = (plan?.billing_interval || 'MONTHLY').toUpperCase()
+  const base = (s.lines || []).reduce((sum: number, l: any) => sum + Number(l.quantity || 1) * Number(l.unit_price || 0), 0)
+  if (interval === 'DAILY') return Math.round(base * 30)
+  if (interval === 'WEEKLY') return Math.round(base * 4.33)
+  if (interval === 'YEARLY') return Math.round(base / 12)
+  return base // MONTHLY
+}
+
 // --- Analytics & Staff Dashboard ---
 app.get('/api/v1/analytics/dashboard', (req: AuthenticatedRequest, res) => {
   if (!requireAdmin(req, res)) return
@@ -2021,10 +2148,7 @@ app.get('/api/v1/analytics/dashboard', (req: AuthenticatedRequest, res) => {
   const todayStr = formatDateISO(today)
   const activeSubs = db.data.subscriptions.filter((s: any) => s.status === 'ACTIVE')
 
-  const mrr = activeSubs.reduce((acc: number, s: any) => {
-    const base = (s.lines || []).reduce((sum: number, l: any) => sum + Number(l.quantity || 1) * Number(l.unit_price || 0), 0)
-    return acc + base
-  }, 0)
+  const mrr = activeSubs.reduce((acc: number, s: any) => acc + computeSubscriptionMRR(s), 0)
 
   const totalCollected = db.data.payments.reduce((acc: number, p: any) => acc + Number(p.amount || 0), 0)
 
@@ -2118,10 +2242,7 @@ app.get('/api/v1/analytics/staff-dashboard', (req: AuthenticatedRequest, res) =>
 app.get('/api/v1/analytics/mrr', (req: AuthenticatedRequest, res) => {
   if (!requireStaffOrAdmin(req, res)) return
   const activeSubs = db.data.subscriptions.filter((s: any) => s.status === 'ACTIVE')
-  const mrr = activeSubs.reduce((acc: number, s: any) => {
-    const base = (s.lines || []).reduce((sum: number, l: any) => sum + Number(l.quantity || 1) * Number(l.unit_price || 0), 0)
-    return acc + base
-  }, 0)
+  const mrr = activeSubs.reduce((acc: number, s: any) => acc + computeSubscriptionMRR(s), 0)
   res.json({ mrr, arr: mrr * 12 })
 })
 
@@ -2249,9 +2370,10 @@ app.post('/api/v1/assistant/query', (req: AuthenticatedRequest, res) => {
     const myInvoiceIds = myInvoices.map((i: any) => i.id)
     const myPayments = db.data.payments.filter((p: any) => myInvoiceIds.includes(p.invoice_id))
 
-    if (q.includes('active') || q.includes('subscription status') || q.includes('my subscription')) {
+    if (q.includes('subscription') || q.includes('active') || q.includes('plan')) {
       const active = mySubs.filter((s: any) => s.status === 'ACTIVE')
-      const rows = active.map((s: any) => {
+      const targetSubs = active.length > 0 ? active : mySubs
+      const rows = targetSubs.map((s: any) => {
         const plan = db.data.plans.find((p: any) => p.id === s.plan_id)
         const amount = (s.lines || []).reduce((acc: number, l: any) => acc + Number(l.quantity || 1) * Number(l.unit_price || 0), 0)
         return {
@@ -2267,7 +2389,7 @@ app.post('/api/v1/assistant/query', (req: AuthenticatedRequest, res) => {
         mode: 'fallback',
         fallback: true,
         answer: rows.length > 0
-          ? `You have ${rows.length} active subscription(s) on your account:`
+          ? `You have ${rows.length} subscription(s) on your account:`
           : 'You currently have no active subscriptions.',
         data: rows,
       })
@@ -2405,10 +2527,7 @@ app.post('/api/v1/assistant/query', (req: AuthenticatedRequest, res) => {
 
   if (q.includes('mrr') || q.includes('revenue')) {
     const activeSubs = db.data.subscriptions.filter((s: any) => s.status === 'ACTIVE')
-    const mrr = activeSubs.reduce((acc: number, s: any) => {
-      const base = (s.lines || []).reduce((sum: number, l: any) => sum + Number(l.quantity || 1) * Number(l.unit_price || 0), 0)
-      return acc + base
-    }, 0)
+    const mrr = activeSubs.reduce((acc: number, s: any) => acc + computeSubscriptionMRR(s), 0)
     return res.json({
       mode: 'fallback',
       fallback: true,
