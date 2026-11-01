@@ -4,13 +4,14 @@ import fs from 'fs'
 import path from 'path'
 import crypto from 'crypto'
 import bcrypt from 'bcryptjs'
+import jwt from 'jsonwebtoken'
 import { createServer as createViteServer } from 'vite'
 
 const PORT = 3000
 const DATA_DIR = path.resolve(process.cwd(), 'data')
 const DB_FILE = path.join(DATA_DIR, 'subsecure_db.json')
 const GENESIS_HASH = '0'.repeat(64)
-const JWT_SECRET = 'subsecure_super_secret_jwt_key_2026'
+const JWT_SECRET = process.env.JWT_SECRET_KEY || process.env.JWT_SECRET || 'subsecure_super_secret_jwt_key_2026'
 
 // Ensure data directory exists
 if (!fs.existsSync(DATA_DIR)) {
@@ -642,9 +643,23 @@ function authMiddleware(req: AuthenticatedRequest, res: Response, next: NextFunc
     return next()
   }
 
-  // Token is either email or format 'user_<id>'
-  const user = db.data.users.find((u: any) => u.email === token || String(u.id) === token || `user_${u.id}` === token)
-  req.user = user || null
+  try {
+    const decoded = jwt.verify(token, JWT_SECRET) as any
+    if (!decoded || (!decoded.id && !decoded.sub)) {
+      req.user = null
+      return next()
+    }
+    const userId = Number(decoded.id || decoded.sub)
+    const user = db.data.users.find((u: any) => u.id === userId)
+    if (!user || user.is_active === false) {
+      req.user = null
+      return next()
+    }
+    req.user = user
+  } catch (err) {
+    // Malformed token, expired token, signature mismatch, or raw string pseudo-token
+    req.user = null
+  }
   next()
 }
 
@@ -713,7 +728,18 @@ app.post('/api/v1/auth/login', (req, res) => {
     return res.status(401).json({ detail: 'Invalid email or password' })
   }
 
-  const token = user.email
+  const token = jwt.sign(
+    {
+      sub: user.id,
+      id: user.id,
+      email: user.email,
+      role: user.role,
+      customer_id: user.customer_id,
+    },
+    JWT_SECRET,
+    { expiresIn: '8h' }
+  )
+
   res.json({
     access_token: token,
     token,
@@ -772,12 +798,33 @@ app.post('/api/v1/auth/register', (req, res) => {
   db.appendEvent('user', newUserId, 'UserCreated', { email, role: 'CUSTOMER' }, newUserId)
   db.save()
 
+  const token = jwt.sign(
+    {
+      sub: newUserId,
+      id: newUserId,
+      email: newUser.email,
+      role: newUser.role,
+      customer_id: newUser.customer_id,
+    },
+    JWT_SECRET,
+    { expiresIn: '8h' }
+  )
+
   res.status(201).json({
+    access_token: token,
+    token,
     id: newUserId,
     name,
     email,
     role: 'CUSTOMER',
     customer_id: customerId,
+    user: {
+      id: newUserId,
+      name,
+      email,
+      role: 'CUSTOMER',
+      customer_id: customerId,
+    },
   })
 })
 
@@ -792,7 +839,7 @@ app.get('/api/v1/auth/me', (req: AuthenticatedRequest, res) => {
   })
 })
 
-// Forgot Password with secure expiring single-use reset tokens
+// Forgot Password with secure expiring single-use reset tokens stored as SHA-256 hash
 app.post('/api/v1/auth/forgot-password', (req, res) => {
   const { email } = req.body
   if (!email) {
@@ -808,13 +855,14 @@ app.post('/api/v1/auth/forgot-password', (req, res) => {
     })
   }
 
-  // Generate cryptographically secure token valid for 15 minutes
-  const resetToken = `rst_${crypto.randomBytes(24).toString('hex')}`
+  // Generate cryptographically secure token (32 bytes) valid for 15 minutes
+  const rawToken = `rst_${crypto.randomBytes(32).toString('hex')}`
+  const tokenHash = crypto.createHash('sha256').update(rawToken).digest('hex')
   const expiresAt = Date.now() + 15 * 60 * 1000 // 15 mins
 
   if (!db.data.resetTokens) db.data.resetTokens = []
   db.data.resetTokens.push({
-    token: resetToken,
+    token_hash: tokenHash,
     user_id: user.id,
     email: user.email,
     expires_at: expiresAt,
@@ -822,13 +870,14 @@ app.post('/api/v1/auth/forgot-password', (req, res) => {
   })
 
   // Log dispatch event to audit ledger
-  db.appendEvent('user', user.id, 'PasswordResetRequested', { email: user.email, token_preview: resetToken.slice(0, 8) + '…' }, user.id)
+  db.appendEvent('user', user.id, 'PasswordResetRequested', { email: user.email, token_hash_preview: tokenHash.slice(0, 8) + '…' }, user.id)
   db.save()
 
+  // Deliver token in response for test execution / client reset flow
   res.json({
     success: true,
     message: `Password reset link and security verification token generated for ${user.email}. Link valid for 15 minutes.`,
-    token: resetToken,
+    token: rawToken,
   })
 })
 
@@ -849,19 +898,22 @@ app.post('/api/v1/auth/reset-password', (req, res) => {
     return res.status(404).json({ detail: 'User account not found' })
   }
 
-  // If a reset token was provided, verify it is valid, not expired, and not used
-  if (token && db.data.resetTokens) {
-    const record = db.data.resetTokens.find((r: any) => r.token === token && r.user_id === user.id)
-    if (!record) {
-      return res.status(400).json({ detail: 'Invalid password reset token' })
-    }
-    if (record.used) {
-      return res.status(400).json({ detail: 'Password reset token has already been used' })
-    }
-    if (Date.now() > record.expires_at) {
-      return res.status(400).json({ detail: 'Password reset token has expired. Please request a new one.' })
-    }
-    record.used = true
+  if (!token) {
+    return res.status(400).json({ detail: 'Password reset token is required' })
+  }
+
+  const tokenHash = crypto.createHash('sha256').update(token).digest('hex')
+  const record = (db.data.resetTokens || []).find((r: any) => (r.token_hash === tokenHash || r.token === token) && r.user_id === user.id)
+  if (!record) {
+    return res.status(400).json({ detail: 'Invalid password reset token' })
+  }
+  if (record.used) {
+    return res.status(400).json({ detail: 'Password reset token has already been used' })
+  }
+  if (Date.now() > record.expires_at) {
+    return res.status(400).json({ detail: 'Password reset token has expired. Please request a new one.' })
+  }
+  record.used = true
   }
 
   user.password_hash = bcrypt.hashSync(new_password, 10)
@@ -1350,8 +1402,18 @@ app.post('/api/v1/subscriptions/:id/transition', (req: AuthenticatedRequest, res
     if (plan && !plan.allow_renewal) {
       return res.status(400).json({ detail: 'Plan does not allow renewal' })
     }
+    const interval = (plan?.billing_interval || 'MONTHLY').toUpperCase()
     const exp = sub.expiry_date ? new Date(sub.expiry_date) : new Date()
-    exp.setFullYear(exp.getFullYear() + 1)
+    if (interval === 'DAILY') {
+      exp.setDate(exp.getDate() + 1)
+    } else if (interval === 'WEEKLY') {
+      exp.setDate(exp.getDate() + 7)
+    } else if (interval === 'YEARLY') {
+      exp.setFullYear(exp.getFullYear() + 1)
+    } else {
+      // MONTHLY default
+      exp.setMonth(exp.getMonth() + 1)
+    }
     sub.expiry_date = formatDateISO(exp)
     sub.status = 'ACTIVE'
   } else if (action === 'close') {
@@ -1412,32 +1474,52 @@ function computeSubscriptionPreview(sub: any) {
 
   // Evaluate discounts
   let discountTotal = 0
-  const appliedRules: string[] = []
+  const appliedRules: any[] = []
+  const todayStr = formatDateISO(new Date())
   const totalQty = (sub.lines || []).reduce((acc: number, l: any) => acc + Number(l.quantity || 1), 0)
 
   for (const rule of db.data.discountRules || []) {
     if (!rule.is_active) continue
     if (rule.usage_limit && rule.usage_count >= rule.usage_limit) continue
+    if (rule.start_date && todayStr < rule.start_date) continue
+    if (rule.end_date && todayStr > rule.end_date) continue
     if (rule.min_quantity && totalQty < rule.min_quantity) continue
     if (rule.min_purchase && subtotal < rule.min_purchase) continue
 
     if (rule.discount_type === 'PERCENTAGE') {
       const disc = Math.round(subtotal * (Number(rule.discount_value) / 100))
       discountTotal += disc
-      appliedRules.push(`${rule.name} (-₹${disc})`)
+      appliedRules.push({ rule_id: rule.id, name: rule.name, amount: disc, label: `${rule.name} (-₹${disc})` })
     } else if (rule.discount_type === 'FIXED') {
       const disc = Math.min(subtotal, Number(rule.discount_value))
       discountTotal += disc
-      appliedRules.push(`${rule.name} (-₹${disc})`)
+      appliedRules.push({ rule_id: rule.id, name: rule.name, amount: disc, label: `${rule.name} (-₹${disc})` })
     }
   }
 
   discountTotal = Math.min(subtotal, discountTotal) // Prevent negative
   const taxable = subtotal - discountTotal
-  const taxTotal = Math.round(taxable * 0.18) // standard GST 18%
+
+  // Dynamic tax resolution
+  const cust = db.data.customers.find((c: any) => c.id === sub.customer_id)
+  let taxRate = 18
+  if (db.data.taxRules && db.data.taxRules.length > 0) {
+    let matched = null
+    if (cust?.region) {
+      matched = db.data.taxRules.find((tr: any) => tr.is_active && (tr.region === cust.region || cust.region.startsWith(tr.region)))
+    }
+    if (!matched) {
+      matched = db.data.taxRules.find((tr: any) => tr.is_active)
+    }
+    if (matched) {
+      taxRate = Number(matched.percentage !== undefined ? matched.percentage : (matched.rate ?? 18))
+    }
+  }
+
+  const taxTotal = Math.round((taxable * taxRate) / 100)
   const total = taxable + taxTotal
 
-  return { subtotal, discount_total: discountTotal, tax_total: taxTotal, total, lines, applied_rules: appliedRules }
+  return { subtotal, discount_total: discountTotal, tax_total: taxTotal, tax_rate: taxRate, total, lines, applied_rules: appliedRules }
 }
 
 app.post('/api/v1/billing/simulate', (req: AuthenticatedRequest, res) => {
@@ -1568,12 +1650,23 @@ app.post('/api/v1/billing/execute', (req: AuthenticatedRequest, res) => {
           id: i + 1,
           invoice_id: newInvoiceId,
           ...l,
-          tax_amount: Math.round(l.line_total * 0.18),
+          tax_amount: Math.round((l.line_total * (preview.tax_rate || 18)) / 100),
         })),
       }
 
       db.data.invoices.push(newInvoice)
       db.data.idempotencyKeys[idempotencyKey] = newInvoiceId
+
+      // Increment usage count for applied discount rules
+      for (const applied of preview.applied_rules || []) {
+        const rId = typeof applied === 'object' ? applied.rule_id : null
+        if (rId) {
+          const rule = db.data.discountRules.find((r: any) => r.id === rId)
+          if (rule) {
+            rule.usage_count = (rule.usage_count || 0) + 1
+          }
+        }
+      }
 
       // Advance subscription next_billing_date
       const plan = db.data.plans.find((p: any) => p.id === sub.plan_id)

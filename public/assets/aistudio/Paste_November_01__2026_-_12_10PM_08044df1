@@ -1,0 +1,1086 @@
+# SUBSECURE AI — COMPLETE ALL REMAINING PROBLEM STATEMENT REQUIREMENTS
+
+## PROJECT CONTEXT
+
+You are working on the existing **SubSecure AI – Subscription Management System** project.
+
+Repository: https://github.com/nryogesh/odoo-coding
+
+The project already contains:
+- React + Vite + Tailwind CSS frontend.
+- Node.js + Express backend in the existing server implementation.
+- Existing API routes and service layers.
+- Existing JSON-based data persistence.
+- Authentication and role management.
+- Products and product variants.
+- Subscription plans.
+- Quotations and quotation templates.
+- Subscription lifecycle management.
+- Billing simulation and invoice generation.
+- Discount and tax management.
+- Payment recording and reconciliation.
+- Revenue reports and dashboards.
+- Existing automated tests.
+
+A significant amount of the application has already been implemented.
+
+**Your task is NOT to rebuild the application. Your task is to inspect, complete, correct, secure and validate the existing implementation so that it satisfies the original Subscription Management System Problem Statement.**
+
+---
+
+# 1. ABSOLUTE RULES — DO NOT VIOLATE THESE
+
+Before making changes, understand the existing repository.
+
+### Preserve the existing project
+
+1. Do NOT change the overall project architecture.
+2. Do NOT reorganize the project folders.
+3. Do NOT rename existing folders, files, components, API routes or modules unnecessarily.
+4. Do NOT replace the current frontend framework.
+5. Do NOT replace React, Vite, Tailwind CSS, Express or the existing technology stack.
+6. Do NOT redesign the application.
+7. Do NOT change the existing colour scheme, typography, sidebar, navbar, dashboard layout or visual identity.
+8. Do NOT remove existing working features.
+9. Do NOT introduce duplicate implementations of existing services.
+10. Do NOT create another backend alongside the existing backend.
+11. Do NOT replace working APIs with mock APIs.
+12. Do NOT use hardcoded frontend data to simulate successful API operations.
+13. Do NOT break existing routes, authentication flows or dashboard navigation.
+14. Do NOT introduce unrelated features.
+
+### Scope restriction
+
+Only implement functionality required by the original problem statement or necessary to make an existing required functionality secure and reliable.
+
+Do NOT add:
+- New AI features.
+- New dashboards.
+- Additional analytics modules.
+- Unrequested notification systems.
+- Unrequested integrations.
+- New business modules.
+- Decorative UI features.
+- Unnecessary third-party services.
+
+The objective is **problem statement compliance, not feature expansion**.
+
+### Implementation principle
+
+For every requirement:
+
+- First inspect the existing implementation.
+- Identify the exact missing or incorrect part.
+- Modify the existing implementation.
+- Reuse existing services, components, API routes and utilities wherever possible.
+- Preserve backward compatibility where practical.
+- Add or update tests.
+- Verify that the existing frontend still works with the backend.
+
+Do not mark a feature complete merely because a UI screen or API endpoint exists. Verify the actual business logic.
+
+---
+
+# 2. AUTHENTICATION AND SECURITY
+
+This is the highest-priority area.
+
+Inspect the existing authentication implementation in `server.ts`, the frontend authentication context, API client and login page.
+
+## 2.1 Implement genuine JWT authentication
+
+The existing implementation accepts email addresses or user IDs as bearer tokens. This is insecure.
+
+Replace this behaviour with proper signed JWT authentication.
+
+Requirements:
+
+- Use a maintained JWT library compatible with the existing Node.js environment.
+- Generate a signed access token after successful login.
+- Include the authenticated user's ID and necessary identity claims.
+- Set a reasonable token expiry.
+- Verify the JWT signature on every protected API request.
+- Verify token expiry.
+- Reject malformed, expired, tampered and invalid tokens.
+- Never authenticate a user using an email address or numeric user ID directly.
+- Never trust a role supplied by the frontend.
+- Load the user's current role and account status from the server-side user record.
+- Reject inactive or deleted users.
+- Keep the existing authentication middleware and permission helper structure.
+- Use environment variables for JWT secrets.
+- Fail securely if the required production secret is missing.
+- Never hardcode production secrets in source code.
+
+Update the existing frontend API client so it sends the actual access token with protected requests.
+
+Ensure login, page refresh, logout and session expiry work correctly.
+
+## 2.2 Role-based access control
+
+The system must support:
+
+- ADMIN
+- STAFF
+- CUSTOMER
+
+Verify permissions at the backend level.
+
+ADMIN:
+- Create and manage staff accounts.
+- Manage users.
+- Manage products and plans.
+- Manage discount and tax configurations.
+- Execute live billing.
+- Access all reports and administrative information.
+
+STAFF:
+- Manage customers and their subscriptions.
+- Create and manage quotations.
+- Manage invoices and payments as permitted by the existing workflow.
+- View operational reports.
+- Cannot create administrators or staff accounts.
+- Cannot execute administrator-only operations.
+
+CUSTOMER:
+- View only their own profile.
+- View only their own subscriptions.
+- View only their own quotations and invoices where applicable.
+- View only their own payments.
+- Submit requests for their own subscriptions.
+- Cannot access another customer's information.
+- Cannot access administrative APIs.
+
+Check EVERY relevant API route, not just the frontend route guards.
+
+## 2.3 Customer ownership validation
+
+Inspect all endpoints that accept customer IDs, subscription IDs, invoice IDs and payment IDs.
+
+A customer must never be able to access or manipulate another customer's records by changing an ID in an API request.
+
+In particular:
+
+- Validate subscription ownership when creating customer service requests.
+- Validate invoice ownership when viewing invoice details.
+- Validate payment ownership when viewing payment information.
+- Validate ownership before subscription lifecycle actions.
+- Do not trust customer_id sent by the frontend for customer-role requests.
+- Derive customer identity from the authenticated user.
+
+Return appropriate HTTP 401 or 403 responses.
+
+## 2.4 Password requirements
+
+Maintain the existing password complexity rules:
+
+- Minimum 8 characters.
+- At least one uppercase letter.
+- At least one lowercase letter.
+- At least one special character.
+
+Ensure validation happens on the backend.
+
+Use bcrypt or the existing secure password hashing implementation.
+
+Never store plaintext passwords.
+
+Never return password hashes in API responses.
+
+## 2.5 Forgot password and reset password
+
+The existing implementation generates reset tokens but does not deliver them through email and exposes the token in the API response.
+
+Complete the existing password recovery flow.
+
+Requirements:
+
+1. Customer enters registered email.
+2. Backend generates a cryptographically secure random token.
+3. Store only a hash of the reset token.
+4. Set a 15-minute expiry.
+5. Send the reset link to the registered email address.
+6. Do not expose the reset token in production API responses.
+7. Require a valid token for every password reset.
+8. Reject expired tokens.
+9. Reject previously used tokens.
+10. Mark the token as used after successful reset.
+11. Invalidate previous reset tokens when appropriate.
+12. Prevent account enumeration through consistent forgot-password responses.
+13. Apply password complexity rules to the new password.
+14. Record the reset event without logging the complete token.
+
+Use a minimal email delivery integration configured through environment variables.
+
+Do not hardcode SMTP credentials.
+
+If email credentials are unavailable in the local development environment, provide a development-only email preview/logging mechanism that does not expose reset tokens in production.
+
+Preserve the existing login page and its current recovery workflow. Only make the necessary changes to connect it to the real backend process.
+
+---
+
+# 3. PRODUCT MANAGEMENT
+
+Inspect the existing Products module and its backend routes.
+
+The problem statement requires:
+
+- Product name.
+- Product type.
+- Sales price.
+- Cost price.
+- Notes.
+- Product variants.
+- Variant-specific price adjustments.
+
+Complete missing validation.
+
+Requirements:
+
+- Product name must not be empty.
+- Prices must be valid non-negative numbers.
+- Product type must be one of the supported types.
+- Variant names must be valid.
+- Variant price adjustments must be valid numbers.
+- Product variants must be associated with their correct parent product.
+- Reject invalid product and variant references in subscriptions and quotations.
+- Ensure inactive products cannot be used for new subscriptions unless the existing business rules explicitly permit it.
+- Preserve historical invoice and subscription prices if the original product price changes.
+
+Verify that the frontend and backend use consistent field names.
+
+Do not redesign the product management page.
+
+---
+
+# 4. SUBSCRIPTION PLAN MANAGEMENT
+
+Inspect the existing Plans module and its API implementation.
+
+The problem statement requires:
+
+- Daily, weekly, monthly and yearly billing.
+- Minimum quantities.
+- Available-from date.
+- Available-until date.
+- Pause permission.
+- Early closure permission.
+- Renewal permission.
+- Automatic closure.
+
+Complete the following validations.
+
+## 4.1 Plan creation
+
+- Plan name must be provided.
+- Product must exist and be active.
+- Price must be valid and non-negative.
+- Billing interval must be DAILY, WEEKLY, MONTHLY or YEARLY.
+- Minimum quantity must be at least 1.
+- Available-until must not be earlier than available-from.
+- Boolean permissions must be stored correctly.
+
+## 4.2 Plan eligibility
+
+Whenever a quotation or subscription is created:
+
+- Verify that the selected plan exists.
+- Verify that the plan is active.
+- Verify that the current date falls within the plan's availability period.
+- Verify that the requested quantity satisfies minimum_quantity.
+- Verify that the selected product and variant belong to the plan.
+- Reject invalid combinations at the backend level.
+
+## 4.3 Plan lifecycle
+
+Verify that:
+
+- Pause is permitted only when allow_pause is true.
+- Early closure is permitted only when allow_early_close is true.
+- Renewal is permitted only when allow_renewal is true.
+- Expired plans/subscriptions cannot be billed.
+- Automatic closure occurs when the configured auto_close rule applies.
+- Every transition follows valid state rules.
+
+Do not allow arbitrary transitions just because an API request supplies an action name.
+
+---
+
+# 5. QUOTATIONS AND SUBSCRIPTION LIFECYCLE
+
+Inspect the existing quotation and subscription APIs and their frontend services.
+
+Do not create new quotation or subscription modules.
+
+Complete the existing workflow.
+
+## 5.1 Quotation creation
+
+Verify that quotations support:
+
+- Customer selection.
+- Product selection.
+- Plan selection.
+- Quantity.
+- Tax.
+- Discount.
+- Validity period.
+- Quotation templates.
+- Correct total calculation.
+
+Backend validation must confirm:
+
+- Customer exists and is active.
+- Product exists and is active.
+- Plan exists and is eligible.
+- Quantity satisfies the plan's minimum quantity.
+- Prices are valid.
+- Discount and tax values are within valid ranges.
+- Quotation expiry is correctly calculated.
+
+## 5.2 Quotation lifecycle
+
+Implement and validate the permitted quotation states.
+
+The expected business workflow should support:
+
+DRAFT → QUOTATION/SENT → CONFIRMED or REJECTED/EXPIRED, according to the existing state model.
+
+Requirements:
+
+- Prevent invalid state transitions.
+- Prevent expired quotations from being confirmed.
+- Prevent rejected quotations from being converted into subscriptions.
+- Preserve quotation details for audit/history.
+- Ensure conversion cannot create duplicate subscriptions.
+- Create a subscription only through a valid confirmed quotation workflow where that workflow applies.
+
+Do not automatically activate a subscription if the existing workflow requires an intermediate confirmation.
+
+## 5.3 Subscription creation
+
+Validate:
+
+- Customer.
+- Plan.
+- Product.
+- Variant.
+- Quantity.
+- Start date.
+- Billing interval.
+- Availability period.
+- Minimum quantity.
+
+## 5.4 Subscription lifecycle
+
+Support the existing required operations:
+
+- Confirmation.
+- Activation.
+- Pause.
+- Resume.
+- Renewal.
+- Early closure.
+- Expiry.
+- Automatic closure.
+
+Important:
+
+- Renewal duration must follow the plan's billing interval.
+- Do not add a fixed one-year extension for every subscription.
+- DAILY renewal should advance by one day.
+- WEEKLY renewal should advance by seven days.
+- MONTHLY renewal should advance by one month.
+- YEARLY renewal should advance by one year.
+- Respect plan permissions.
+- Do not allow invalid transitions.
+- Ensure paused, closed and expired subscriptions are not billed.
+- Record important lifecycle changes in the existing audit mechanism.
+
+Preserve the current subscription screens and interaction patterns.
+
+---
+
+# 6. RECURRING BILLING ENGINE
+
+This is one of the most important parts of the problem statement.
+
+Inspect the existing billing simulation and execution endpoints.
+
+Do not replace the current billing module.
+
+Complete its existing implementation.
+
+## 6.1 Billing simulation
+
+Simulation must be a true dry run.
+
+It must:
+
+- Identify subscriptions due for billing.
+- Check subscription status.
+- Check expiry.
+- Check next_billing_date.
+- Check billing interval.
+- Check applicable discounts.
+- Check applicable taxes.
+- Calculate invoice totals.
+- Detect already-billed periods.
+- Show ready, skipped and blocked subscriptions.
+- Explain why a subscription is blocked or skipped.
+
+IMPORTANT:
+
+Simulation must not:
+
+- Generate invoices.
+- Change subscription dates.
+- Update discount usage counts.
+- Create payments.
+- Mutate any persistent business data.
+
+## 6.2 Correct billing eligibility
+
+The existing execution code processes active subscriptions without adequately checking whether their next billing date is due.
+
+Correct this.
+
+A subscription should be billed only when:
+
+- It is ACTIVE.
+- It has reached its next billing date.
+- It has not expired.
+- Its plan is eligible.
+- The relevant billing period has not already been processed.
+
+Use the subscription's actual billing interval.
+
+Do not assume that every subscription is billed monthly.
+
+## 6.3 Billing period calculations
+
+Implement correct period calculations for:
+
+- Daily.
+- Weekly.
+- Monthly.
+- Yearly.
+
+Do not use a hardcoded 28-day billing period for all invoices.
+
+Handle month-end dates safely.
+
+Ensure the next billing date is advanced from the correct scheduled date rather than simply from the current execution date.
+
+If multiple billing periods are overdue, define and implement a consistent catch-up strategy so that valid billing periods are not silently skipped.
+
+## 6.4 Duplicate invoice prevention
+
+The existing idempotency implementation must be hardened.
+
+Requirements:
+
+- Generate a unique idempotency key per subscription and billing period.
+- Check the key before invoice creation.
+- Prevent concurrent requests from creating duplicate invoices.
+- Ensure an invoice and its idempotency record are committed consistently.
+- Ensure a failed invoice creation does not leave a misleading idempotency record.
+- Ensure retrying a failed request does not corrupt billing state.
+- Return the existing invoice reference when the same period has already been processed.
+
+Use the existing persistence architecture and make the smallest necessary reliability improvement.
+
+If the current persistence mechanism cannot provide safe concurrent writes, document and implement the minimum compatible persistence improvement rather than pretending that an in-memory check is transactional.
+
+## 6.5 Invoice generation
+
+Each generated invoice must contain:
+
+- Invoice number.
+- Customer.
+- Subscription.
+- Billing period.
+- Issue date.
+- Due date.
+- Line items.
+- Quantity.
+- Unit price.
+- Discount.
+- Tax.
+- Final total.
+- Paid amount.
+- Outstanding balance.
+- Invoice status.
+
+Ensure calculations are consistent between simulation and actual execution.
+
+The same input data must produce the same invoice preview and final invoice totals.
+
+## 6.6 Automatic recurring billing
+
+Inspect the existing auto-billing settings.
+
+Do not leave automatic billing as a dashboard setting or a hardcoded success message.
+
+Implement a reliable scheduled execution mechanism compatible with the existing deployment environment.
+
+Requirements:
+
+- Respect the configured automatic billing setting.
+- Execute only due subscriptions.
+- Use the same validated billing engine as manual execution.
+- Prevent repeated processing of the same billing period.
+- Record the result of each run.
+- Handle errors without stopping unrelated subscriptions.
+- Make the execution schedule configurable through environment variables or existing settings.
+
+If the deployment platform does not support an always-running scheduler, use a compatible scheduled endpoint or platform cron integration. Do not introduce a separate application architecture.
+
+Manual billing simulation and execution must continue to work.
+
+---
+
+# 7. DISCOUNT MANAGEMENT
+
+Inspect the existing discount management API and frontend.
+
+The problem statement requires:
+
+- Fixed discounts.
+- Percentage discounts.
+- Minimum quantity.
+- Minimum purchase amount.
+- Validity dates.
+- Usage limits.
+
+Complete the existing implementation.
+
+## 7.1 Discount validation
+
+For every discount:
+
+- Name is required.
+- Discount type must be FIXED or PERCENTAGE.
+- Discount value must be valid.
+- Percentage cannot exceed 100%.
+- Fixed discount cannot produce a negative invoice total.
+- Minimum quantity must be valid.
+- Minimum purchase amount must be non-negative.
+- Start date and end date must be valid.
+- End date cannot be earlier than start date.
+- Usage limit must be respected.
+
+## 7.2 Discount applicability
+
+During billing:
+
+- Ignore inactive discounts.
+- Ignore discounts outside their validity period.
+- Ignore discounts that reached their usage limit.
+- Check minimum quantity.
+- Check minimum purchase amount.
+- Apply discounts only to the eligible subscription/product scope supported by the existing data model.
+- Prevent duplicate application of the same discount rule.
+- Prevent combined discounts from exceeding the subtotal.
+
+## 7.3 Usage tracking
+
+The existing usage_count must be updated correctly.
+
+- Increase usage count only after successful invoice generation.
+- Do not increase it during simulation.
+- Do not increase it when invoice generation fails.
+- Never exceed usage_limit.
+- Prevent concurrent billing operations from exceeding the limit.
+
+Preserve the existing discount UI. Add only the minimum missing input fields needed to configure validity and applicability.
+
+---
+
+# 8. TAX MANAGEMENT
+
+The existing billing calculation uses a hardcoded 18% tax rate even though tax rules are available.
+
+Correct this.
+
+Requirements:
+
+- Use configured active tax rules.
+- Ignore inactive tax rules.
+- Apply the correct configured percentage.
+- Validate tax percentages.
+- Avoid hardcoded tax calculations in the billing engine.
+- Keep the quotation preview and invoice calculation consistent.
+- Store the tax rate and tax amount applied to each invoice.
+- Preserve historical invoice tax values when tax rules change.
+- Avoid applying tax twice.
+- Ensure invoice totals reconcile correctly.
+
+If no matching tax rule exists, follow a clear and consistent validation/default policy based on the existing configuration. Do not silently assume 18% for every transaction.
+
+Do not redesign the tax management interface.
+
+---
+
+# 9. PAYMENT MANAGEMENT AND RECONCILIATION
+
+Inspect the existing payment APIs and frontend.
+
+The problem statement requires recording:
+
+- Payment amount.
+- Payment method.
+- Payment date.
+- Notes/reference.
+- Invoice association.
+- Partial payments.
+- Full payments.
+- Outstanding balance.
+
+Complete and validate the existing implementation.
+
+Requirements:
+
+1. Invoice must exist.
+2. Invoice must not be cancelled.
+3. Payment amount must be greater than zero.
+4. Payment must not exceed the outstanding balance unless the existing business rules explicitly support advance payments.
+5. Payment method must be valid.
+6. Payment date must be valid.
+7. Invoice balance must be recalculated after payment.
+8. Multiple partial payments must work.
+9. Fully paid invoices must be marked PAID.
+10. Partially paid invoices must retain the correct outstanding balance and appropriate status.
+11. Payment records must be associated with the correct invoice and customer.
+12. Payment creation must be protected against duplicate submissions.
+13. A failed payment operation must not leave invoice and payment records inconsistent.
+14. Payment history must be preserved.
+
+Ensure all balance calculations are performed by the backend.
+
+Do not rely on frontend calculations for payment correctness.
+
+---
+
+# 10. REQUIRED REVENUE REPORTING
+
+The original problem statement requires:
+
+- Active subscriptions.
+- Revenue collected.
+- Outstanding balances.
+- Overdue invoices.
+
+Inspect the existing dashboard and reports.
+
+Verify that:
+
+- Active subscription count excludes paused, closed and expired subscriptions.
+- Revenue collected is based on successful recorded payments.
+- Outstanding balances use actual invoice balances.
+- Overdue invoices are determined using due dates and outstanding balances.
+- Fully paid and cancelled invoices are excluded from outstanding reports.
+- Partial payments are reflected correctly.
+- Report calculations use backend data.
+- Customer-role users cannot access global financial reports.
+- Admin and Staff permissions are enforced appropriately.
+
+Do not add new reports or analytics modules.
+
+Correct the existing reports only.
+
+---
+
+# 11. DATA PERSISTENCE AND DEPLOYMENT RELIABILITY
+
+Inspect the existing JSON persistence implementation.
+
+Do not redesign the application architecture or create a second backend.
+
+The goal is to ensure that the existing system behaves reliably in the intended deployment environment.
+
+Verify:
+
+- Data survives application restarts where the deployment environment promises persistence.
+- Multiple requests do not overwrite one another's changes.
+- Concurrent billing operations cannot corrupt data.
+- Failed writes are reported correctly.
+- Data files are not accidentally exposed publicly.
+- Secrets and credentials are not committed.
+- Database paths and configuration are environment-aware.
+
+If the current JSON-file persistence cannot reliably satisfy the deployment environment's persistence and concurrency requirements, implement the smallest compatible change needed to provide durable shared storage.
+
+Do not perform a large database migration unless it is necessary for correctness or deployment.
+
+Preserve the existing API contracts and frontend integration.
+
+---
+
+# 12. PERFORMANCE REQUIREMENT
+
+The problem statement expects the application to respond within two seconds.
+
+Do not claim this requirement is satisfied based only on a small seeded dataset.
+
+Create or update performance tests for:
+
+- Login.
+- Customer lookup.
+- Product listing.
+- Plan listing.
+- Subscription listing.
+- Invoice listing.
+- Billing simulation.
+- Revenue reporting.
+
+Test with a realistically sized dataset, including thousands of subscriptions and associated invoices.
+
+Requirements:
+
+- Record response times.
+- Verify that required API operations complete within two seconds under the defined test conditions.
+- Identify slow operations.
+- Optimize existing queries and calculations without changing the architecture unnecessarily.
+- Avoid repeatedly scanning large collections when an existing index or lookup structure can be reused.
+- Do not fabricate benchmark results.
+
+Include test conditions, dataset size and measured results in the final report.
+
+---
+
+# 13. AUTOMATED TESTING
+
+Inspect the existing `tests/suite.js` and related tests.
+
+Do not remove existing tests just because they fail after security improvements. Update them to test the correct behaviour.
+
+Add tests for the following.
+
+## Authentication
+
+- Successful login.
+- Invalid credentials.
+- Expired JWT.
+- Invalid JWT.
+- Tampered JWT.
+- Email used directly as bearer token must be rejected.
+- User ID used directly as bearer token must be rejected.
+- Inactive user must be rejected.
+- Password complexity.
+- Password hashing.
+- Duplicate registration.
+- Reset token expiry.
+- Reset token reuse.
+- Reset without token must fail.
+- Reset with invalid token must fail.
+
+## RBAC
+
+- Admin-only routes.
+- Staff permissions.
+- Customer restrictions.
+- Cross-customer data access attempts.
+- Customer request referencing another customer's subscription must fail.
+
+## Plans and subscriptions
+
+- Invalid billing interval.
+- Invalid availability period.
+- Minimum quantity enforcement.
+- Inactive plan rejection.
+- Pause restriction.
+- Renewal restriction.
+- Early closure restriction.
+- Correct renewal duration for each billing interval.
+- Invalid lifecycle transitions.
+
+## Quotations
+
+- Valid quotation creation.
+- Invalid customer.
+- Invalid plan.
+- Expired quotation.
+- Invalid quotation transition.
+- Duplicate subscription conversion prevention.
+
+## Billing
+
+- Simulation does not modify persistent data.
+- Future billing dates are not billed.
+- Due subscriptions are billed.
+- Expired subscriptions are not billed.
+- Paused subscriptions are not billed.
+- Daily billing.
+- Weekly billing.
+- Monthly billing.
+- Yearly billing.
+- Duplicate billing prevention.
+- Concurrent execution safety.
+- Failed billing retry.
+- Correct invoice totals.
+
+## Discounts and taxes
+
+- Fixed discount.
+- Percentage discount.
+- Expired discount.
+- Inactive discount.
+- Minimum quantity.
+- Minimum purchase.
+- Usage limit.
+- Usage count increment.
+- Tax-rule selection.
+- Inactive tax rejection.
+- Tax calculation accuracy.
+
+## Payments
+
+- Full payment.
+- Partial payment.
+- Multiple partial payments.
+- Invalid payment.
+- Overpayment rejection.
+- Duplicate payment submission.
+- Cancelled invoice rejection.
+- Correct outstanding balance.
+
+## Reporting
+
+- Active subscription count.
+- Collected revenue.
+- Outstanding balance.
+- Overdue invoice calculation.
+- Partial payment reflected in reports.
+
+## Performance
+
+- Run the relevant APIs with realistic data volume.
+- Record actual response times.
+- Do not mark the performance requirement complete unless it has been tested.
+
+---
+
+# 14. FRONTEND INTEGRATION VALIDATION
+
+The frontend is already developed.
+
+Do not redesign it.
+
+Verify that the existing pages work with the corrected backend.
+
+Check:
+
+- Login and logout.
+- Forgot password and reset password.
+- Admin, Staff and Customer permissions.
+- Products.
+- Plans.
+- Customers.
+- Quotations.
+- Subscriptions.
+- Billing simulation.
+- Billing execution.
+- Invoices.
+- Payments.
+- Discounts and taxes.
+- Reports.
+- Customer portal.
+
+Ensure:
+
+- Existing forms send correct field names.
+- Backend validation errors are displayed clearly.
+- Loading states work.
+- Empty states work.
+- Error states work.
+- Successful operations refresh the relevant data.
+- No frontend page silently uses mock data.
+- No existing working screen is broken.
+
+Only modify the UI when necessary to collect or display a field explicitly required by the problem statement.
+
+Preserve the current design.
+
+---
+
+# 15. IMPLEMENTATION PROCESS — FOLLOW THIS ORDER
+
+Do not attempt an uncontrolled rewrite.
+
+### Phase 1: Audit
+
+Before editing:
+
+1. Inspect the complete repository.
+2. Inspect package configuration.
+3. Inspect backend routes.
+4. Inspect frontend API services.
+5. Inspect authentication.
+6. Inspect data persistence.
+7. Inspect billing.
+8. Inspect discount and tax calculations.
+9. Inspect subscription and quotation lifecycle.
+10. Inspect existing automated tests.
+
+Create a requirement checklist.
+
+Classify each requirement as:
+
+- COMPLETE.
+- PARTIALLY COMPLETE.
+- MISSING.
+- INCORRECT.
+- UNVERIFIED.
+
+Do not rewrite already-correct functionality.
+
+### Phase 2: Implement critical fixes
+
+Implement in this order:
+
+1. JWT authentication and RBAC.
+2. Password reset with email delivery.
+3. Customer ownership validation.
+4. Plan and subscription business-rule validation.
+5. Quotation lifecycle validation.
+6. Billing eligibility and period calculations.
+7. Billing idempotency and concurrency safety.
+8. Discount validity and usage tracking.
+9. Tax-rule integration.
+10. Payment reconciliation.
+11. Report correctness.
+12. Persistence and deployment reliability.
+
+### Phase 3: Tests
+
+Run the existing test suite.
+
+Add the missing tests.
+
+Fix failures caused by the implementation.
+
+Do not weaken tests or remove assertions to make the test suite pass.
+
+### Phase 4: Frontend verification
+
+Verify every existing module against the actual backend.
+
+Fix integration problems without changing the UI design.
+
+### Phase 5: Final validation
+
+Run:
+
+- Dependency installation if necessary.
+- Backend type/build checks.
+- Frontend production build.
+- Automated tests.
+- Authentication tests.
+- Billing tests.
+- Performance tests.
+
+Verify that the application starts correctly.
+
+---
+
+# 16. ACCEPTANCE CRITERIA
+
+The task is complete only when all of the following are true:
+
+- [ ] Authentication uses verified signed JWTs.
+- [ ] Email addresses and user IDs cannot be used as bearer tokens.
+- [ ] Admin, Staff and Customer permissions are enforced by the backend.
+- [ ] Customers cannot access other customers' records.
+- [ ] Passwords are securely hashed.
+- [ ] Password reset requires an expiring, single-use token delivered through email.
+- [ ] Products and variants have server-side validation.
+- [ ] Plan intervals and restrictions work correctly.
+- [ ] Plan availability and minimum quantities are enforced.
+- [ ] Quotation lifecycle rules are enforced.
+- [ ] Subscription lifecycle rules are enforced.
+- [ ] Renewal follows the selected billing interval.
+- [ ] Billing simulation does not modify data.
+- [ ] Only subscriptions due for billing are processed.
+- [ ] Daily, weekly, monthly and yearly billing calculations are correct.
+- [ ] Duplicate invoice generation is prevented, including concurrent attempts.
+- [ ] Discount dates, eligibility and usage limits are enforced.
+- [ ] Tax rules are applied dynamically.
+- [ ] Payment reconciliation is accurate.
+- [ ] Revenue reports reflect actual financial data.
+- [ ] Persistence works reliably in the intended deployment environment.
+- [ ] Required performance tests have been executed.
+- [ ] Existing frontend functionality continues to work.
+- [ ] Existing project structure and design are preserved.
+- [ ] No unrelated features have been added.
+
+---
+
+# 17. FINAL REPORT REQUIRED
+
+After implementation, provide a detailed report containing:
+
+## A. Requirements compliance
+
+For every original problem statement requirement, provide:
+
+- Requirement.
+- Previous status.
+- What was corrected.
+- Current status.
+- Test used to verify it.
+
+## B. Modified files
+
+List every modified file and briefly explain why it was changed.
+
+Do not report files that were not modified.
+
+## C. Test results
+
+Provide:
+
+- Total tests.
+- Passed tests.
+- Failed tests.
+- Skipped tests.
+- Performance measurements.
+- Any remaining issues.
+
+Only report actual executed results.
+
+## D. Deployment configuration
+
+List:
+
+- Required environment variables.
+- Email configuration.
+- Backend start command.
+- Frontend build command.
+- Any scheduler or persistent storage configuration needed.
+
+Never expose secret values.
+
+## E. Remaining limitations
+
+Clearly identify any requirement that is not completely implemented or could not be verified.
+
+Do not mark untested functionality as complete.
+
+---
+
+# FINAL INSTRUCTION
+
+**Complete the existing SubSecure AI project against the original Brightloop Subscription Management System problem statement.**
+
+Do not change the project's structure, architecture, identity, UI design or intended purpose.
+
+Do not add features beyond the original requirements.
+
+Do not rebuild working modules.
+
+Make the smallest necessary changes to the existing codebase, but implement the missing business logic thoroughly and securely.
+
+Prioritize correctness, data integrity, backend validation, security, billing reliability and real end-to-end functionality.
+
+The final result must be the same SubSecure AI application, with the same overall design and structure, but with all required problem statement functionality properly implemented and tested.
