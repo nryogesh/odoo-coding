@@ -1,0 +1,2277 @@
+{
+  "users": [
+    {
+      "id": 1,
+      "name": "Kirthi Admin",
+      "email": "admin@brightloop.io",
+      "password_hash": "$2b$10$lluarU4dbU3x5jPPlZ1P5epU/ACL7AVdtJg8HV7LYWwjbfEvFs09u",
+      "role": "ADMIN",
+      "customer_id": null,
+      "is_active": true,
+      "created_at": "2026-09-02"
+    },
+    {
+      "id": 2,
+      "name": "Yogesh Staff",
+      "email": "staff@brightloop.io",
+      "password_hash": "$2b$10$Rp75zIuYXW0eTF8gmQoJOuwgrrG3YBagctnmROO0H9XCHAUlK6Fji",
+      "role": "STAFF",
+      "customer_id": null,
+      "is_active": true,
+      "created_at": "2026-09-12"
+    },
+    {
+      "id": 3,
+      "name": "Acme Customer",
+      "email": "customer@acme.io",
+      "password_hash": "$2b$10$SywnWvvi33pP9N/4eYWKruQXV7TXaCJJNWpTrSM6WvhXB1SqcBtqS",
+      "role": "CUSTOMER",
+      "customer_id": 1,
+      "is_active": true,
+      "created_at": "2026-09-17"
+    },
+    {
+      "id": 4,
+      "name": "Test Customer",
+      "email": "cust_1793514565074@example.com",
+      "password_hash": "$2b$10$x.DWZ2dIVMY3xaxcOFUZI.0XBuMzt6S..Jck4Mw5SqjR9Xt6oKNHS",
+      "role": "CUSTOMER",
+      "customer_id": 6,
+      "is_active": true,
+      "created_at": "2026-11-01"
+    },
+    {
+      "id": 5,
+      "name": "Test Customer",
+      "email": "cust_1793514575610@example.com",
+      "password_hash": "$2b$10$4ryzHqyp8G9cD2J4eRMqAu4UixCnRL1a3vvGAWiiUYLILTrEBawKe",
+      "role": "CUSTOMER",
+      "customer_id": 7,
+      "is_active": true,
+      "created_at": "2026-11-01"
+    },
+    {
+      "id": 6,
+      "name": "Test Customer",
+      "email": "cust_1793514596830@example.com",
+      "password_hash": "$2b$10$qc7N2PMJ4DqREQQpjG2TjexIr/9m7cVQFRlP3kVkzM/HrmLRvAtne",
+      "role": "CUSTOMER",
+      "customer_id": 8,
+      "is_active": true,
+      "created_at": "2026-11-01"
+    },
+    {
+      "id": 7,
+      "name": "Test Customer",
+      "email": "cust_1793514618228@example.com",
+      "password_hash": "$2b$10$rVq4QdMgdUDkBqfxAM00SucBZFgE0hPlIGoK5tU8phPq4NiTHvXzK",
+      "role": "CUSTOMER",
+      "customer_id": 9,
+      "is_active": true,
+      "created_at": "2026-11-01"
+    }
+  ],
+  "customers": [
+    {
+      "id": 1,
+      "name": "Acme Technologies",
+      "email": "billing@acme.io",
+      "company": "Acme Technologies",
+      "region": "IN-South",
+      "assigned_staff_id": 2
+    },
+    {
+      "id": 2,
+      "name": "Northstar Retail",
+      "email": "it@northstar.example",
+      "company": "Northstar Retail",
+      "region": "IN-North",
+      "assigned_staff_id": 2
+    },
+    {
+      "id": 3,
+      "name": "PixelWorks",
+      "email": "ops@pixelworks.example",
+      "company": "PixelWorks Studio",
+      "region": "IN-West",
+      "assigned_staff_id": 2
+    },
+    {
+      "id": 4,
+      "name": "Bluemont Logistics",
+      "email": "finance@bluemont.example",
+      "company": "Bluemont Logistics",
+      "region": "IN-South",
+      "assigned_staff_id": 2
+    },
+    {
+      "id": 5,
+      "name": "Cider & Co",
+      "email": "hello@cider.example",
+      "company": "Cider & Co",
+      "region": "IN-East",
+      "assigned_staff_id": 2
+    },
+    {
+      "id": 6,
+      "name": "Test Customer",
+      "email": "cust_1793514565074@example.com",
+      "company": "Test Customer",
+      "region": "IN-South",
+      "assigned_staff_id": 2
+    },
+    {
+      "id": 7,
+      "name": "Test Customer",
+      "email": "cust_1793514575610@example.com",
+      "company": "Test Customer",
+      "region": "IN-South",
+      "assigned_staff_id": 2
+    },
+    {
+      "id": 8,
+      "name": "Test Customer",
+      "email": "cust_1793514596830@example.com",
+      "company": "Test Customer",
+      "region": "IN-South",
+      "assigned_staff_id": 2
+    },
+    {
+      "id": 9,
+      "name": "Test Customer",
+      "email": "cust_1793514618228@example.com",
+      "company": "Test Customer",
+      "region": "IN-South",
+      "assigned_staff_id": 2
+    }
+  ],
+  "products": [
+    {
+      "id": 1,
+      "name": "Brightloop CRM",
+      "product_type": "SUBSCRIPTION",
+      "sales_price": 5000,
+      "cost_price": 1200,
+      "is_active": true,
+      "notes": "Flagship enterprise CRM solution",
+      "variants": [
+        {
+          "id": 1,
+          "name": "Odoo Brand",
+          "price_adjustment": 560
+        },
+        {
+          "id": 2,
+          "name": "White Label",
+          "price_adjustment": 900
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "name": "Brightloop Analytics",
+      "product_type": "SUBSCRIPTION",
+      "sales_price": 8000,
+      "cost_price": 2000,
+      "is_active": true,
+      "notes": "Real-time billing & revenue intelligence",
+      "variants": []
+    },
+    {
+      "id": 3,
+      "name": "Priority Support Add-on",
+      "product_type": "ADDON",
+      "sales_price": 1500,
+      "cost_price": 400,
+      "is_active": true,
+      "notes": "24/7 dedicated response SLA",
+      "variants": []
+    },
+    {
+      "id": 4,
+      "name": "Onboarding Package",
+      "product_type": "SERVICE",
+      "sales_price": 3000,
+      "cost_price": 1000,
+      "is_active": true,
+      "notes": "Guided data migration and engineer setup",
+      "variants": []
+    }
+  ],
+  "plans": [
+    {
+      "id": 1,
+      "name": "CRM Enterprise Monthly",
+      "product_id": 1,
+      "price": 5000,
+      "billing_interval": "MONTHLY",
+      "minimum_quantity": 1,
+      "available_from": "2026-05-05",
+      "available_until": null,
+      "auto_close": false,
+      "allow_early_close": true,
+      "allow_pause": true,
+      "allow_renewal": true,
+      "is_active": true
+    },
+    {
+      "id": 2,
+      "name": "CRM Growth Annual",
+      "product_id": 1,
+      "price": 54000,
+      "billing_interval": "YEARLY",
+      "minimum_quantity": 5,
+      "available_from": "2026-05-05",
+      "available_until": null,
+      "auto_close": false,
+      "allow_early_close": false,
+      "allow_pause": false,
+      "allow_renewal": true,
+      "is_active": true
+    },
+    {
+      "id": 3,
+      "name": "Analytics Pro Monthly",
+      "product_id": 2,
+      "price": 8000,
+      "billing_interval": "MONTHLY",
+      "minimum_quantity": 1,
+      "available_from": "2026-07-04",
+      "available_until": null,
+      "auto_close": false,
+      "allow_early_close": true,
+      "allow_pause": true,
+      "allow_renewal": true,
+      "is_active": true
+    },
+    {
+      "id": 4,
+      "name": "Support Retainer Weekly",
+      "product_id": 3,
+      "price": 1500,
+      "billing_interval": "WEEKLY",
+      "minimum_quantity": 1,
+      "available_from": "2026-07-04",
+      "available_until": null,
+      "auto_close": true,
+      "allow_early_close": true,
+      "allow_pause": true,
+      "allow_renewal": false,
+      "is_active": true
+    },
+    {
+      "id": 5,
+      "name": "Onboarding Sprint Daily",
+      "product_id": 4,
+      "price": 300,
+      "billing_interval": "DAILY",
+      "minimum_quantity": 1,
+      "available_from": "2026-09-02",
+      "available_until": null,
+      "auto_close": false,
+      "allow_early_close": true,
+      "allow_pause": false,
+      "allow_renewal": false,
+      "is_active": true
+    }
+  ],
+  "templates": [
+    {
+      "id": 1,
+      "name": "Standard SaaS Monthly Bundle",
+      "description": "Brightloop CRM monthly subscription with 18% standard GST and 30 days validity.",
+      "plan_id": 1,
+      "product_id": 1,
+      "default_quantity": 1,
+      "tax_percent": 18,
+      "discount_percent": 0,
+      "valid_days": 30,
+      "lines": [
+        {
+          "product_id": 1,
+          "quantity": 1,
+          "unit_price": 5000,
+          "product_name": "Brightloop CRM"
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "name": "Enterprise Security SLA Bundle",
+      "description": "Analytics Pro paired with 24/7 dedicated priority support add-on and 10% volume discount.",
+      "plan_id": 3,
+      "product_id": 2,
+      "default_quantity": 3,
+      "tax_percent": 18,
+      "discount_percent": 10,
+      "valid_days": 30,
+      "lines": [
+        {
+          "product_id": 2,
+          "quantity": 3,
+          "unit_price": 8000,
+          "product_name": "Brightloop Analytics"
+        },
+        {
+          "product_id": 3,
+          "quantity": 1,
+          "unit_price": 1500,
+          "product_name": "Priority Support Add-on"
+        }
+      ]
+    }
+  ],
+  "discountRules": [
+    {
+      "id": 1,
+      "name": "Enterprise Seat Discount",
+      "description": "15% discount when ordering 10 or more seats",
+      "is_active": true,
+      "discount_type": "PERCENTAGE",
+      "discount_value": 15,
+      "min_quantity": 10,
+      "min_purchase": 0,
+      "usage_count": 3,
+      "usage_limit": 100
+    },
+    {
+      "id": 2,
+      "name": "Loyalty Fixed Discount",
+      "description": "₹1,000 fixed discount for order subtotals above ₹20,000",
+      "is_active": true,
+      "discount_type": "FIXED",
+      "discount_value": 1000,
+      "min_quantity": 1,
+      "min_purchase": 20000,
+      "usage_count": 1,
+      "usage_limit": 50
+    }
+  ],
+  "taxRules": [
+    {
+      "id": 1,
+      "name": "Standard GST 18%",
+      "region": "IN",
+      "percentage": 18,
+      "is_active": true,
+      "category": "Standard Goods & Services Tax"
+    },
+    {
+      "id": 2,
+      "name": "Export Zero-Rated",
+      "region": "Global",
+      "percentage": 0,
+      "is_active": false,
+      "category": "Zero-Rated Foreign B2B"
+    }
+  ],
+  "subscriptions": [
+    {
+      "id": 1,
+      "subscription_number": "SUB-1001",
+      "customer_id": 1,
+      "plan_id": 1,
+      "start_date": "2026-10-01",
+      "expiry_date": "2027-08-28",
+      "next_billing_date": "2027-03-01",
+      "payment_terms": "net_15",
+      "status": "ACTIVE",
+      "created_at": "2026-09-17",
+      "lines": [
+        {
+          "id": 1,
+          "product_id": 1,
+          "variant_id": null,
+          "quantity": 12,
+          "unit_price": 5000,
+          "product_name": "Brightloop CRM"
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "subscription_number": "SUB-1002",
+      "customer_id": 2,
+      "plan_id": 2,
+      "start_date": "2026-10-01",
+      "expiry_date": "2027-10-07",
+      "next_billing_date": "2030-11-01",
+      "payment_terms": "net_30",
+      "status": "ACTIVE",
+      "created_at": "2026-09-22",
+      "lines": [
+        {
+          "id": 2,
+          "product_id": 1,
+          "variant_id": null,
+          "quantity": 5,
+          "unit_price": 54000,
+          "product_name": "Brightloop CRM"
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "subscription_number": "SUB-1003",
+      "customer_id": 3,
+      "plan_id": 3,
+      "start_date": "2026-10-01",
+      "expiry_date": "2027-05-20",
+      "next_billing_date": "2027-03-01",
+      "payment_terms": "net_15",
+      "status": "ACTIVE",
+      "created_at": "2026-09-27",
+      "lines": [
+        {
+          "id": 3,
+          "product_id": 2,
+          "variant_id": null,
+          "quantity": 3,
+          "unit_price": 8000,
+          "product_name": "Brightloop Analytics"
+        },
+        {
+          "id": 4,
+          "product_id": 3,
+          "variant_id": null,
+          "quantity": 1,
+          "unit_price": 1500,
+          "product_name": "Priority Support Add-on"
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "subscription_number": "SUB-1004",
+      "customer_id": 4,
+      "plan_id": 1,
+      "start_date": "2026-10-01",
+      "expiry_date": "2027-03-01",
+      "next_billing_date": null,
+      "payment_terms": "net_15",
+      "status": "PAUSED",
+      "created_at": "2026-10-02",
+      "lines": [
+        {
+          "id": 5,
+          "product_id": 1,
+          "variant_id": null,
+          "quantity": 4,
+          "unit_price": 5000,
+          "product_name": "Brightloop CRM"
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "subscription_number": "SUB-1005",
+      "customer_id": 5,
+      "plan_id": 4,
+      "start_date": "2026-10-08",
+      "expiry_date": "2026-11-05",
+      "next_billing_date": "2026-11-29",
+      "payment_terms": "net_7",
+      "status": "ACTIVE",
+      "created_at": "2026-10-08",
+      "lines": [
+        {
+          "id": 6,
+          "product_id": 3,
+          "variant_id": null,
+          "quantity": 2,
+          "unit_price": 1500,
+          "product_name": "Priority Support Add-on"
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "subscription_number": "SUB-1006",
+      "customer_id": 1,
+      "plan_id": 1,
+      "start_date": "2026-11-01",
+      "expiry_date": "2027-11-01",
+      "next_billing_date": "2026-11-01",
+      "payment_terms": "net_15",
+      "status": "CONFIRMED",
+      "created_at": "2026-11-01",
+      "lines": [
+        {
+          "id": 1,
+          "product_id": 1,
+          "variant_id": null,
+          "quantity": 2,
+          "unit_price": 5000,
+          "product_name": "Brightloop CRM"
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "subscription_number": "SUB-1007",
+      "customer_id": 1,
+      "plan_id": 1,
+      "start_date": "2026-11-01",
+      "expiry_date": "2027-11-01",
+      "next_billing_date": "2026-11-01",
+      "payment_terms": "net_15",
+      "status": "CONFIRMED",
+      "created_at": "2026-11-01",
+      "lines": [
+        {
+          "id": 1,
+          "product_id": 1,
+          "variant_id": null,
+          "quantity": 2,
+          "unit_price": 5000,
+          "product_name": "Brightloop CRM"
+        }
+      ]
+    },
+    {
+      "id": 8,
+      "subscription_number": "SUB-1008",
+      "customer_id": 1,
+      "plan_id": 1,
+      "start_date": "2026-11-01",
+      "expiry_date": "2027-11-01",
+      "next_billing_date": "2026-11-01",
+      "payment_terms": "net_15",
+      "status": "CONFIRMED",
+      "created_at": "2026-11-01",
+      "lines": [
+        {
+          "id": 1,
+          "product_id": 1,
+          "variant_id": null,
+          "quantity": 2,
+          "unit_price": 5000,
+          "product_name": "Brightloop CRM"
+        }
+      ]
+    },
+    {
+      "id": 9,
+      "subscription_number": "SUB-1009",
+      "customer_id": 1,
+      "plan_id": 1,
+      "start_date": "2026-11-01",
+      "expiry_date": "2027-11-01",
+      "next_billing_date": "2026-11-01",
+      "payment_terms": "net_15",
+      "status": "CONFIRMED",
+      "created_at": "2026-11-01",
+      "lines": [
+        {
+          "id": 1,
+          "product_id": 1,
+          "variant_id": null,
+          "quantity": 2,
+          "unit_price": 5000,
+          "product_name": "Brightloop CRM"
+        }
+      ]
+    }
+  ],
+  "quotations": [
+    {
+      "id": 1,
+      "quotation_number": "QUO-1001",
+      "customer_id": 2,
+      "plan_id": 2,
+      "valid_until": "2026-11-26",
+      "tax_percent": 18,
+      "discount_percent": 5,
+      "status": "QUOTATION",
+      "lines": [
+        {
+          "id": 1,
+          "product_id": 1,
+          "quantity": 10,
+          "unit_price": 54000,
+          "product_name": "Brightloop CRM"
+        }
+      ],
+      "subtotal": 540000,
+      "discount_total": 27000,
+      "tax_total": 92340,
+      "total": 605340,
+      "assigned_staff_id": 2
+    },
+    {
+      "id": 2,
+      "quotation_number": "QUO-1002",
+      "customer_id": 1,
+      "plan_id": 1,
+      "valid_until": "2026-12-01",
+      "tax_percent": 18,
+      "discount_percent": 10,
+      "status": "ACTIVE",
+      "subtotal": 10000,
+      "discount_total": 1000,
+      "tax_total": 1620,
+      "total": 10620,
+      "assigned_staff_id": 2,
+      "lines": [
+        {
+          "id": 1,
+          "product_id": 1,
+          "quantity": 2,
+          "unit_price": 5000,
+          "product_name": "Brightloop CRM"
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "quotation_number": "QUO-1003",
+      "customer_id": 1,
+      "plan_id": 1,
+      "valid_until": "2026-12-01",
+      "tax_percent": 18,
+      "discount_percent": 10,
+      "status": "ACTIVE",
+      "subtotal": 10000,
+      "discount_total": 1000,
+      "tax_total": 1620,
+      "total": 10620,
+      "assigned_staff_id": 2,
+      "lines": [
+        {
+          "id": 1,
+          "product_id": 1,
+          "quantity": 2,
+          "unit_price": 5000,
+          "product_name": "Brightloop CRM"
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "quotation_number": "QUO-1004",
+      "customer_id": 1,
+      "plan_id": 1,
+      "valid_until": "2026-12-01",
+      "tax_percent": 18,
+      "discount_percent": 10,
+      "status": "ACTIVE",
+      "subtotal": 10000,
+      "discount_total": 1000,
+      "tax_total": 1620,
+      "total": 10620,
+      "assigned_staff_id": 2,
+      "lines": [
+        {
+          "id": 1,
+          "product_id": 1,
+          "quantity": 2,
+          "unit_price": 5000,
+          "product_name": "Brightloop CRM"
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "quotation_number": "QUO-1005",
+      "customer_id": 1,
+      "plan_id": 1,
+      "valid_until": "2026-12-01",
+      "tax_percent": 18,
+      "discount_percent": 10,
+      "status": "ACTIVE",
+      "subtotal": 10000,
+      "discount_total": 1000,
+      "tax_total": 1620,
+      "total": 10620,
+      "assigned_staff_id": 2,
+      "lines": [
+        {
+          "id": 1,
+          "product_id": 1,
+          "quantity": 2,
+          "unit_price": 5000,
+          "product_name": "Brightloop CRM"
+        }
+      ]
+    }
+  ],
+  "invoices": [
+    {
+      "id": 1,
+      "invoice_number": "INV-SUB-1001-2026-10",
+      "subscription_id": 1,
+      "customer_id": 1,
+      "billing_period_key": "2026-10",
+      "billing_period_start": "2026-10-01",
+      "billing_period_end": "2026-10-29",
+      "issue_date": "2026-10-01",
+      "due_date": "2026-10-16",
+      "subtotal": 60000,
+      "discount_total": 9000,
+      "tax_total": 9180,
+      "total": 60180,
+      "paid_amount": 60180,
+      "balance": 0,
+      "status": "PAID",
+      "lines": [
+        {
+          "id": 1,
+          "product_id": 1,
+          "description": "Subscription SUB-1001 - Brightloop CRM (x12)",
+          "quantity": 12,
+          "unit_price": 5000,
+          "tax_amount": 9180,
+          "line_total": 60000
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "invoice_number": "INV-SUB-1002-2026-10",
+      "subscription_id": 2,
+      "customer_id": 2,
+      "billing_period_key": "2026-10-NS",
+      "billing_period_start": "2026-10-01",
+      "billing_period_end": "2026-10-29",
+      "issue_date": "2026-10-01",
+      "due_date": "2026-10-31",
+      "subtotal": 270000,
+      "discount_total": 0,
+      "tax_total": 48600,
+      "total": 318600,
+      "paid_amount": 318600,
+      "balance": 0,
+      "status": "PAID",
+      "lines": [
+        {
+          "id": 2,
+          "product_id": 1,
+          "description": "Subscription SUB-1002 - Brightloop CRM Annual (x5)",
+          "quantity": 5,
+          "unit_price": 54000,
+          "tax_amount": 48600,
+          "line_total": 270000
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "invoice_number": "INV-SUB-1003-2026-10",
+      "subscription_id": 3,
+      "customer_id": 3,
+      "billing_period_key": "2026-10-PW",
+      "billing_period_start": "2026-10-01",
+      "billing_period_end": "2026-10-29",
+      "issue_date": "2026-10-01",
+      "due_date": "2026-10-27",
+      "subtotal": 25500,
+      "discount_total": 1000,
+      "tax_total": 4410,
+      "total": 28910,
+      "paid_amount": 28910,
+      "balance": 0,
+      "status": "PAID",
+      "lines": [
+        {
+          "id": 3,
+          "product_id": 2,
+          "description": "Subscription SUB-1003 - Brightloop Analytics",
+          "quantity": 3,
+          "unit_price": 8000,
+          "tax_amount": 4140,
+          "line_total": 24000
+        },
+        {
+          "id": 4,
+          "product_id": 3,
+          "description": "Subscription SUB-1003 - Priority Support Add-on",
+          "quantity": 1,
+          "unit_price": 1500,
+          "tax_amount": 270,
+          "line_total": 1500
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "invoice_number": "INV-SUB-1001-2026-11",
+      "subscription_id": 1,
+      "customer_id": 1,
+      "billing_period_key": "2026-11",
+      "billing_period_start": "2026-11-01",
+      "billing_period_end": "2026-11-29",
+      "issue_date": "2026-11-01",
+      "due_date": "2026-11-15",
+      "subtotal": 60000,
+      "tax_total": 9000,
+      "discount_total": 10000,
+      "total": 59000,
+      "paid_amount": 59000,
+      "balance": 0,
+      "status": "PAID",
+      "lines": [
+        {
+          "id": 1,
+          "invoice_id": 4,
+          "product_id": 1,
+          "variant_id": null,
+          "quantity": 12,
+          "unit_price": 5000,
+          "description": "Subscription SUB-1001 - Brightloop CRM",
+          "line_total": 60000,
+          "tax_amount": 10800
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "invoice_number": "INV-SUB-1002-2026-11",
+      "subscription_id": 2,
+      "customer_id": 2,
+      "billing_period_key": "2026-11",
+      "billing_period_start": "2026-11-01",
+      "billing_period_end": "2026-11-29",
+      "issue_date": "2026-11-01",
+      "due_date": "2026-11-15",
+      "subtotal": 270000,
+      "tax_total": 48420,
+      "discount_total": 1000,
+      "total": 317420,
+      "paid_amount": 317420,
+      "balance": 0,
+      "status": "PAID",
+      "lines": [
+        {
+          "id": 1,
+          "invoice_id": 5,
+          "product_id": 1,
+          "variant_id": null,
+          "quantity": 5,
+          "unit_price": 54000,
+          "description": "Subscription SUB-1002 - Brightloop CRM",
+          "line_total": 270000,
+          "tax_amount": 48600
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "invoice_number": "INV-SUB-1003-2026-11",
+      "subscription_id": 3,
+      "customer_id": 3,
+      "billing_period_key": "2026-11",
+      "billing_period_start": "2026-11-01",
+      "billing_period_end": "2026-11-29",
+      "issue_date": "2026-11-01",
+      "due_date": "2026-11-15",
+      "subtotal": 25500,
+      "tax_total": 4410,
+      "discount_total": 1000,
+      "total": 28910,
+      "paid_amount": 28910,
+      "balance": 0,
+      "status": "PAID",
+      "lines": [
+        {
+          "id": 1,
+          "invoice_id": 6,
+          "product_id": 2,
+          "variant_id": null,
+          "quantity": 3,
+          "unit_price": 8000,
+          "description": "Subscription SUB-1003 - Brightloop Analytics",
+          "line_total": 24000,
+          "tax_amount": 4320
+        },
+        {
+          "id": 2,
+          "invoice_id": 6,
+          "product_id": 3,
+          "variant_id": null,
+          "quantity": 1,
+          "unit_price": 1500,
+          "description": "Subscription SUB-1003 - Priority Support Add-on",
+          "line_total": 1500,
+          "tax_amount": 270
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "invoice_number": "INV-SUB-1005-2026-11",
+      "subscription_id": 5,
+      "customer_id": 5,
+      "billing_period_key": "2026-11",
+      "billing_period_start": "2026-11-01",
+      "billing_period_end": "2026-11-29",
+      "issue_date": "2026-11-01",
+      "due_date": "2026-11-15",
+      "subtotal": 3000,
+      "tax_total": 540,
+      "discount_total": 0,
+      "total": 3540,
+      "paid_amount": 0,
+      "balance": 3540,
+      "status": "CONFIRMED",
+      "lines": [
+        {
+          "id": 1,
+          "invoice_id": 7,
+          "product_id": 3,
+          "variant_id": null,
+          "quantity": 2,
+          "unit_price": 1500,
+          "description": "Subscription SUB-1005 - Priority Support Add-on",
+          "line_total": 3000,
+          "tax_amount": 540
+        }
+      ]
+    },
+    {
+      "id": 8,
+      "invoice_number": "INV-SUB-1001-2026-12",
+      "subscription_id": 1,
+      "customer_id": 1,
+      "billing_period_key": "2026-12",
+      "billing_period_start": "2026-12-01",
+      "billing_period_end": "2026-12-29",
+      "issue_date": "2026-11-01",
+      "due_date": "2026-11-15",
+      "subtotal": 60000,
+      "tax_total": 9000,
+      "discount_total": 10000,
+      "total": 59000,
+      "paid_amount": 0,
+      "balance": 59000,
+      "status": "CONFIRMED",
+      "lines": [
+        {
+          "id": 1,
+          "invoice_id": 8,
+          "product_id": 1,
+          "variant_id": null,
+          "quantity": 12,
+          "unit_price": 5000,
+          "description": "Subscription SUB-1001 - Brightloop CRM",
+          "line_total": 60000,
+          "tax_amount": 10800
+        }
+      ]
+    },
+    {
+      "id": 9,
+      "invoice_number": "INV-SUB-1002-2026-12",
+      "subscription_id": 2,
+      "customer_id": 2,
+      "billing_period_key": "2026-12",
+      "billing_period_start": "2026-12-01",
+      "billing_period_end": "2026-12-29",
+      "issue_date": "2026-11-01",
+      "due_date": "2026-11-15",
+      "subtotal": 270000,
+      "tax_total": 48420,
+      "discount_total": 1000,
+      "total": 317420,
+      "paid_amount": 0,
+      "balance": 317420,
+      "status": "CONFIRMED",
+      "lines": [
+        {
+          "id": 1,
+          "invoice_id": 9,
+          "product_id": 1,
+          "variant_id": null,
+          "quantity": 5,
+          "unit_price": 54000,
+          "description": "Subscription SUB-1002 - Brightloop CRM",
+          "line_total": 270000,
+          "tax_amount": 48600
+        }
+      ]
+    },
+    {
+      "id": 10,
+      "invoice_number": "INV-SUB-1003-2026-12",
+      "subscription_id": 3,
+      "customer_id": 3,
+      "billing_period_key": "2026-12",
+      "billing_period_start": "2026-12-01",
+      "billing_period_end": "2026-12-29",
+      "issue_date": "2026-11-01",
+      "due_date": "2026-11-15",
+      "subtotal": 25500,
+      "tax_total": 4410,
+      "discount_total": 1000,
+      "total": 28910,
+      "paid_amount": 0,
+      "balance": 28910,
+      "status": "CONFIRMED",
+      "lines": [
+        {
+          "id": 1,
+          "invoice_id": 10,
+          "product_id": 2,
+          "variant_id": null,
+          "quantity": 3,
+          "unit_price": 8000,
+          "description": "Subscription SUB-1003 - Brightloop Analytics",
+          "line_total": 24000,
+          "tax_amount": 4320
+        },
+        {
+          "id": 2,
+          "invoice_id": 10,
+          "product_id": 3,
+          "variant_id": null,
+          "quantity": 1,
+          "unit_price": 1500,
+          "description": "Subscription SUB-1003 - Priority Support Add-on",
+          "line_total": 1500,
+          "tax_amount": 270
+        }
+      ]
+    },
+    {
+      "id": 11,
+      "invoice_number": "INV-SUB-1005-2026-12",
+      "subscription_id": 5,
+      "customer_id": 5,
+      "billing_period_key": "2026-12",
+      "billing_period_start": "2026-12-01",
+      "billing_period_end": "2026-12-29",
+      "issue_date": "2026-11-01",
+      "due_date": "2026-11-15",
+      "subtotal": 3000,
+      "tax_total": 540,
+      "discount_total": 0,
+      "total": 3540,
+      "paid_amount": 0,
+      "balance": 3540,
+      "status": "CONFIRMED",
+      "lines": [
+        {
+          "id": 1,
+          "invoice_id": 11,
+          "product_id": 3,
+          "variant_id": null,
+          "quantity": 2,
+          "unit_price": 1500,
+          "description": "Subscription SUB-1005 - Priority Support Add-on",
+          "line_total": 3000,
+          "tax_amount": 540
+        }
+      ]
+    },
+    {
+      "id": 12,
+      "invoice_number": "INV-SUB-1001-2028-11",
+      "subscription_id": 1,
+      "customer_id": 1,
+      "billing_period_key": "2028-11",
+      "billing_period_start": "2028-11-01",
+      "billing_period_end": "2028-11-29",
+      "issue_date": "2026-11-01",
+      "due_date": "2026-11-15",
+      "subtotal": 60000,
+      "tax_total": 9000,
+      "discount_total": 10000,
+      "total": 59000,
+      "paid_amount": 0,
+      "balance": 59000,
+      "status": "CONFIRMED",
+      "lines": [
+        {
+          "id": 1,
+          "invoice_id": 12,
+          "product_id": 1,
+          "variant_id": null,
+          "quantity": 12,
+          "unit_price": 5000,
+          "description": "Subscription SUB-1001 - Brightloop CRM",
+          "line_total": 60000,
+          "tax_amount": 10800
+        }
+      ]
+    },
+    {
+      "id": 13,
+      "invoice_number": "INV-SUB-1002-2028-11",
+      "subscription_id": 2,
+      "customer_id": 2,
+      "billing_period_key": "2028-11",
+      "billing_period_start": "2028-11-01",
+      "billing_period_end": "2028-11-29",
+      "issue_date": "2026-11-01",
+      "due_date": "2026-11-15",
+      "subtotal": 270000,
+      "tax_total": 48420,
+      "discount_total": 1000,
+      "total": 317420,
+      "paid_amount": 0,
+      "balance": 317420,
+      "status": "CONFIRMED",
+      "lines": [
+        {
+          "id": 1,
+          "invoice_id": 13,
+          "product_id": 1,
+          "variant_id": null,
+          "quantity": 5,
+          "unit_price": 54000,
+          "description": "Subscription SUB-1002 - Brightloop CRM",
+          "line_total": 270000,
+          "tax_amount": 48600
+        }
+      ]
+    },
+    {
+      "id": 14,
+      "invoice_number": "INV-SUB-1003-2028-11",
+      "subscription_id": 3,
+      "customer_id": 3,
+      "billing_period_key": "2028-11",
+      "billing_period_start": "2028-11-01",
+      "billing_period_end": "2028-11-29",
+      "issue_date": "2026-11-01",
+      "due_date": "2026-11-15",
+      "subtotal": 25500,
+      "tax_total": 4410,
+      "discount_total": 1000,
+      "total": 28910,
+      "paid_amount": 0,
+      "balance": 28910,
+      "status": "CONFIRMED",
+      "lines": [
+        {
+          "id": 1,
+          "invoice_id": 14,
+          "product_id": 2,
+          "variant_id": null,
+          "quantity": 3,
+          "unit_price": 8000,
+          "description": "Subscription SUB-1003 - Brightloop Analytics",
+          "line_total": 24000,
+          "tax_amount": 4320
+        },
+        {
+          "id": 2,
+          "invoice_id": 14,
+          "product_id": 3,
+          "variant_id": null,
+          "quantity": 1,
+          "unit_price": 1500,
+          "description": "Subscription SUB-1003 - Priority Support Add-on",
+          "line_total": 1500,
+          "tax_amount": 270
+        }
+      ]
+    },
+    {
+      "id": 15,
+      "invoice_number": "INV-SUB-1005-2028-11",
+      "subscription_id": 5,
+      "customer_id": 5,
+      "billing_period_key": "2028-11",
+      "billing_period_start": "2028-11-01",
+      "billing_period_end": "2028-11-29",
+      "issue_date": "2026-11-01",
+      "due_date": "2026-11-15",
+      "subtotal": 3000,
+      "tax_total": 540,
+      "discount_total": 0,
+      "total": 3540,
+      "paid_amount": 0,
+      "balance": 3540,
+      "status": "CONFIRMED",
+      "lines": [
+        {
+          "id": 1,
+          "invoice_id": 15,
+          "product_id": 3,
+          "variant_id": null,
+          "quantity": 2,
+          "unit_price": 1500,
+          "description": "Subscription SUB-1005 - Priority Support Add-on",
+          "line_total": 3000,
+          "tax_amount": 540
+        }
+      ]
+    },
+    {
+      "id": 16,
+      "invoice_number": "INV-SUB-1001-2028-12",
+      "subscription_id": 1,
+      "customer_id": 1,
+      "billing_period_key": "2028-12",
+      "billing_period_start": "2028-12-01",
+      "billing_period_end": "2028-12-29",
+      "issue_date": "2026-11-01",
+      "due_date": "2026-11-15",
+      "subtotal": 60000,
+      "tax_total": 9000,
+      "discount_total": 10000,
+      "total": 59000,
+      "paid_amount": 0,
+      "balance": 59000,
+      "status": "CONFIRMED",
+      "lines": [
+        {
+          "id": 1,
+          "invoice_id": 16,
+          "product_id": 1,
+          "variant_id": null,
+          "quantity": 12,
+          "unit_price": 5000,
+          "description": "Subscription SUB-1001 - Brightloop CRM",
+          "line_total": 60000,
+          "tax_amount": 10800
+        }
+      ]
+    },
+    {
+      "id": 17,
+      "invoice_number": "INV-SUB-1002-2028-12",
+      "subscription_id": 2,
+      "customer_id": 2,
+      "billing_period_key": "2028-12",
+      "billing_period_start": "2028-12-01",
+      "billing_period_end": "2028-12-29",
+      "issue_date": "2026-11-01",
+      "due_date": "2026-11-15",
+      "subtotal": 270000,
+      "tax_total": 48420,
+      "discount_total": 1000,
+      "total": 317420,
+      "paid_amount": 0,
+      "balance": 317420,
+      "status": "CONFIRMED",
+      "lines": [
+        {
+          "id": 1,
+          "invoice_id": 17,
+          "product_id": 1,
+          "variant_id": null,
+          "quantity": 5,
+          "unit_price": 54000,
+          "description": "Subscription SUB-1002 - Brightloop CRM",
+          "line_total": 270000,
+          "tax_amount": 48600
+        }
+      ]
+    },
+    {
+      "id": 18,
+      "invoice_number": "INV-SUB-1003-2028-12",
+      "subscription_id": 3,
+      "customer_id": 3,
+      "billing_period_key": "2028-12",
+      "billing_period_start": "2028-12-01",
+      "billing_period_end": "2028-12-29",
+      "issue_date": "2026-11-01",
+      "due_date": "2026-11-15",
+      "subtotal": 25500,
+      "tax_total": 4410,
+      "discount_total": 1000,
+      "total": 28910,
+      "paid_amount": 0,
+      "balance": 28910,
+      "status": "CONFIRMED",
+      "lines": [
+        {
+          "id": 1,
+          "invoice_id": 18,
+          "product_id": 2,
+          "variant_id": null,
+          "quantity": 3,
+          "unit_price": 8000,
+          "description": "Subscription SUB-1003 - Brightloop Analytics",
+          "line_total": 24000,
+          "tax_amount": 4320
+        },
+        {
+          "id": 2,
+          "invoice_id": 18,
+          "product_id": 3,
+          "variant_id": null,
+          "quantity": 1,
+          "unit_price": 1500,
+          "description": "Subscription SUB-1003 - Priority Support Add-on",
+          "line_total": 1500,
+          "tax_amount": 270
+        }
+      ]
+    },
+    {
+      "id": 19,
+      "invoice_number": "INV-SUB-1005-2028-12",
+      "subscription_id": 5,
+      "customer_id": 5,
+      "billing_period_key": "2028-12",
+      "billing_period_start": "2028-12-01",
+      "billing_period_end": "2028-12-29",
+      "issue_date": "2026-11-01",
+      "due_date": "2026-11-15",
+      "subtotal": 3000,
+      "tax_total": 540,
+      "discount_total": 0,
+      "total": 3540,
+      "paid_amount": 0,
+      "balance": 3540,
+      "status": "CONFIRMED",
+      "lines": [
+        {
+          "id": 1,
+          "invoice_id": 19,
+          "product_id": 3,
+          "variant_id": null,
+          "quantity": 2,
+          "unit_price": 1500,
+          "description": "Subscription SUB-1005 - Priority Support Add-on",
+          "line_total": 3000,
+          "tax_amount": 540
+        }
+      ]
+    }
+  ],
+  "payments": [
+    {
+      "id": 1,
+      "invoice_id": 1,
+      "amount": 60180,
+      "method": "bank_transfer",
+      "payment_date": "2026-10-05",
+      "reference": "SEED-INV-SUB-1001",
+      "note": "Seeded demo payment (simulated)",
+      "created_by": 1
+    },
+    {
+      "id": 2,
+      "invoice_id": 2,
+      "amount": 100000,
+      "method": "bank_transfer",
+      "payment_date": "2026-11-01",
+      "reference": "TXN-1793514526144",
+      "note": null,
+      "created_by": 1
+    },
+    {
+      "id": 3,
+      "invoice_id": 2,
+      "amount": 218600,
+      "method": "bank_transfer",
+      "payment_date": "2026-11-01",
+      "reference": "TXN-1793514532693",
+      "note": null,
+      "created_by": 1
+    },
+    {
+      "id": 4,
+      "invoice_id": 3,
+      "amount": 14455,
+      "method": "upi",
+      "payment_date": "2026-11-01",
+      "reference": "TXN-1793514565294",
+      "note": null,
+      "created_by": 1
+    },
+    {
+      "id": 5,
+      "invoice_id": 3,
+      "amount": 14455,
+      "method": "upi",
+      "payment_date": "2026-11-01",
+      "reference": "TXN-1793514565304",
+      "note": null,
+      "created_by": 1
+    },
+    {
+      "id": 6,
+      "invoice_id": 4,
+      "amount": 29500,
+      "method": "upi",
+      "payment_date": "2026-11-01",
+      "reference": "TXN-1793514575919",
+      "note": null,
+      "created_by": 1
+    },
+    {
+      "id": 7,
+      "invoice_id": 4,
+      "amount": 29500,
+      "method": "upi",
+      "payment_date": "2026-11-01",
+      "reference": "TXN-1793514575922",
+      "note": null,
+      "created_by": 1
+    },
+    {
+      "id": 8,
+      "invoice_id": 5,
+      "amount": 158710,
+      "method": "upi",
+      "payment_date": "2026-11-01",
+      "reference": "TXN-1793514597133",
+      "note": null,
+      "created_by": 1
+    },
+    {
+      "id": 9,
+      "invoice_id": 5,
+      "amount": 158710,
+      "method": "upi",
+      "payment_date": "2026-11-01",
+      "reference": "TXN-1793514597139",
+      "note": null,
+      "created_by": 1
+    },
+    {
+      "id": 10,
+      "invoice_id": 6,
+      "amount": 14455,
+      "method": "upi",
+      "payment_date": "2026-11-01",
+      "reference": "TXN-1793514618513",
+      "note": null,
+      "created_by": 1
+    },
+    {
+      "id": 11,
+      "invoice_id": 6,
+      "amount": 14455,
+      "method": "upi",
+      "payment_date": "2026-11-01",
+      "reference": "TXN-1793514618517",
+      "note": null,
+      "created_by": 1
+    }
+  ],
+  "customerRequests": [
+    {
+      "id": 1,
+      "customer_id": 1,
+      "customer_name": "Acme Technologies",
+      "subscription_id": 1,
+      "subscription_number": "SUB-1001",
+      "request_type": "RENEWAL",
+      "notes": "Customer requesting early renewal extension for another 12-month period with additional 3 seats.",
+      "status": "PENDING",
+      "created_at": "2026-10-30"
+    }
+  ],
+  "settings": {
+    "companyName": "Brightloop Software Pvt Ltd",
+    "companyEmail": "finance@brightloop.io",
+    "currency": "INR",
+    "currencySymbol": "₹",
+    "defaultPaymentTerms": "NET_14",
+    "autoBillingEnabled": true,
+    "autoBillingTime": "02:00 UTC",
+    "lastAutoBillingRun": "2026-11-01T02:00:00.000Z",
+    "lastAutoBillingStatus": "Success: 5 eligible subscriptions evaluated, 0 duplicates",
+    "aiModel": "gemini-1.5-flash",
+    "securityThresholds": {
+      "excessiveDiscountPercent": 50,
+      "unusualQuantityThreshold": 50,
+      "highChurnRiskScore": 60
+    }
+  },
+  "idempotencyKeys": {
+    "1_2026-10": 1,
+    "2_2026-10-NS": 2,
+    "3_2026-10-PW": 3,
+    "1_2026-11": 4,
+    "2_2026-11": 5,
+    "3_2026-11": 6,
+    "5_2026-11": 7,
+    "1_2026-12": 8,
+    "2_2026-12": 9,
+    "3_2026-12": 10,
+    "5_2026-12": 11,
+    "1_2028-11": 12,
+    "2_2028-11": 13,
+    "3_2028-11": 14,
+    "5_2028-11": 15,
+    "1_2028-12": 16,
+    "2_2028-12": 17,
+    "3_2028-12": 18,
+    "5_2028-12": 19
+  },
+  "resetTokens": [
+    {
+      "token": "rst_5b588643fc24d59bac7beb070cf5b17d15a47d6c502607bc",
+      "user_id": 1,
+      "email": "admin@brightloop.io",
+      "expires_at": 1793515465210,
+      "used": false
+    },
+    {
+      "token": "rst_4bce630fc5616301d2536aefcc4093af4e3fcda8f5656b60",
+      "user_id": 5,
+      "email": "cust_1793514575610@example.com",
+      "expires_at": 1793515475727,
+      "used": true
+    },
+    {
+      "token": "rst_9bb6b8d06f7aed3c3d4e41472478a548ccec0dba5018c4a6",
+      "user_id": 6,
+      "email": "cust_1793514596830@example.com",
+      "expires_at": 1793515496949,
+      "used": true
+    },
+    {
+      "token": "rst_ad50b30687df79bbc7001f5254ba407b5af08df750f970f2",
+      "user_id": 7,
+      "email": "cust_1793514618228@example.com",
+      "expires_at": 1793515518348,
+      "used": true
+    }
+  ],
+  "auditEvents": [
+    {
+      "event_id": 1,
+      "sequence_num": 1,
+      "aggregate_type": "user",
+      "aggregate_id": "1",
+      "event_type": "UserCreated",
+      "payload": "{\"email\":\"admin@brightloop.io\",\"role\":\"ADMIN\"}",
+      "timestamp": "2026-09-12",
+      "previous_hash": "0000000000000000000000000000000000000000000000000000000000000000",
+      "event_hash": "8b1929c20b9168b269fc196249de2820e9746049be36fff6f8e227e0816f9a37",
+      "actor_user_id": 1
+    },
+    {
+      "event_id": 2,
+      "sequence_num": 2,
+      "aggregate_type": "user",
+      "aggregate_id": "2",
+      "event_type": "UserCreated",
+      "payload": "{\"email\":\"staff@brightloop.io\",\"role\":\"STAFF\"}",
+      "timestamp": "2026-09-12",
+      "previous_hash": "8b1929c20b9168b269fc196249de2820e9746049be36fff6f8e227e0816f9a37",
+      "event_hash": "c2f12f8df3365feb044f34822b1f2048a34a449476e3aba6665bdc085cf9b326",
+      "actor_user_id": 1
+    },
+    {
+      "event_id": 3,
+      "sequence_num": 3,
+      "aggregate_type": "user",
+      "aggregate_id": "3",
+      "event_type": "UserCreated",
+      "payload": "{\"email\":\"customer@acme.io\",\"role\":\"CUSTOMER\"}",
+      "timestamp": "2026-09-12",
+      "previous_hash": "c2f12f8df3365feb044f34822b1f2048a34a449476e3aba6665bdc085cf9b326",
+      "event_hash": "89a82ff29863e8427ebfbe14f30232fce09b9b89802a845cb7349dbcd86316d8",
+      "actor_user_id": 1
+    },
+    {
+      "event_id": 4,
+      "sequence_num": 4,
+      "aggregate_type": "product",
+      "aggregate_id": "1",
+      "event_type": "ProductCreated",
+      "payload": "{\"name\":\"Brightloop CRM\",\"sales_price\":\"5000\"}",
+      "timestamp": "2026-09-14",
+      "previous_hash": "89a82ff29863e8427ebfbe14f30232fce09b9b89802a845cb7349dbcd86316d8",
+      "event_hash": "c11539850fde45007e2e5886c70c13dd67602e9c0dc494eec148a2fed5f6fc8c",
+      "actor_user_id": 1
+    },
+    {
+      "event_id": 5,
+      "sequence_num": 5,
+      "aggregate_type": "plan",
+      "aggregate_id": "1",
+      "event_type": "PlanCreated",
+      "payload": "{\"name\":\"CRM Enterprise Monthly\",\"price\":\"5000\",\"interval\":\"MONTHLY\"}",
+      "timestamp": "2026-09-14",
+      "previous_hash": "c11539850fde45007e2e5886c70c13dd67602e9c0dc494eec148a2fed5f6fc8c",
+      "event_hash": "e3582a0b1911026c400ab3908fade29cad409952093e45c1495d1dbb84122941",
+      "actor_user_id": 1
+    },
+    {
+      "event_id": 6,
+      "sequence_num": 6,
+      "aggregate_type": "subscription",
+      "aggregate_id": "1",
+      "event_type": "SubscriptionCreated",
+      "payload": "{\"subscription_number\":\"SUB-1001\",\"customer_id\":1,\"plan_id\":1}",
+      "timestamp": "2026-09-17",
+      "previous_hash": "e3582a0b1911026c400ab3908fade29cad409952093e45c1495d1dbb84122941",
+      "event_hash": "7245a14739d969cb2dc36d0207b136406c02acb3fe7d1c5e459ba0939155f001",
+      "actor_user_id": 1
+    },
+    {
+      "event_id": 7,
+      "sequence_num": 7,
+      "aggregate_type": "subscription",
+      "aggregate_id": "1",
+      "event_type": "SubscriptionActivated",
+      "payload": "{\"from\":\"CONFIRMED\",\"to\":\"ACTIVE\",\"subscription_number\":\"SUB-1001\"}",
+      "timestamp": "2026-09-17",
+      "previous_hash": "7245a14739d969cb2dc36d0207b136406c02acb3fe7d1c5e459ba0939155f001",
+      "event_hash": "24da58368f3b22fb3af2400a7e02fd71c776eea9a4f51bfdfcfaef52ad8ed123",
+      "actor_user_id": 1
+    },
+    {
+      "event_id": 8,
+      "sequence_num": 8,
+      "aggregate_type": "invoice",
+      "aggregate_id": "4",
+      "event_type": "InvoiceGenerated",
+      "payload": "{\"invoice_number\":\"INV-SUB-1001-2026-11\",\"subscription_id\":1,\"total\":59000}",
+      "timestamp": "2026-11-01T06:28:38.919Z",
+      "previous_hash": "24da58368f3b22fb3af2400a7e02fd71c776eea9a4f51bfdfcfaef52ad8ed123",
+      "event_hash": "786018af57f90688a6b8d0b0b3542b204a4554f85d39554860d7b9aa1dca095a",
+      "actor_user_id": 1
+    },
+    {
+      "event_id": 9,
+      "sequence_num": 9,
+      "aggregate_type": "invoice",
+      "aggregate_id": "5",
+      "event_type": "InvoiceGenerated",
+      "payload": "{\"invoice_number\":\"INV-SUB-1002-2026-11\",\"subscription_id\":2,\"total\":317420}",
+      "timestamp": "2026-11-01T06:28:38.919Z",
+      "previous_hash": "786018af57f90688a6b8d0b0b3542b204a4554f85d39554860d7b9aa1dca095a",
+      "event_hash": "2a2e6ec772caf3eb6d472a8b3626a3781bf7675983c5e689c33f6257a87c186d",
+      "actor_user_id": 1
+    },
+    {
+      "event_id": 10,
+      "sequence_num": 10,
+      "aggregate_type": "invoice",
+      "aggregate_id": "6",
+      "event_type": "InvoiceGenerated",
+      "payload": "{\"invoice_number\":\"INV-SUB-1003-2026-11\",\"subscription_id\":3,\"total\":28910}",
+      "timestamp": "2026-11-01T06:28:38.920Z",
+      "previous_hash": "2a2e6ec772caf3eb6d472a8b3626a3781bf7675983c5e689c33f6257a87c186d",
+      "event_hash": "82f90aa3f5123204ebe6dbdeda7644cd8291f799a3589e69a9812d7b164ba9d2",
+      "actor_user_id": 1
+    },
+    {
+      "event_id": 11,
+      "sequence_num": 11,
+      "aggregate_type": "invoice",
+      "aggregate_id": "7",
+      "event_type": "InvoiceGenerated",
+      "payload": "{\"invoice_number\":\"INV-SUB-1005-2026-11\",\"subscription_id\":5,\"total\":3540}",
+      "timestamp": "2026-11-01T06:28:38.921Z",
+      "previous_hash": "82f90aa3f5123204ebe6dbdeda7644cd8291f799a3589e69a9812d7b164ba9d2",
+      "event_hash": "b36db865c4db94a259907a6da0dbab6b779758461dfeda1db1ccf71960c811d6",
+      "actor_user_id": 1
+    },
+    {
+      "event_id": 12,
+      "sequence_num": 12,
+      "aggregate_type": "billing_run",
+      "aggregate_id": "1793514518921",
+      "event_type": "BillingBatchExecuted",
+      "payload": "{\"billing_period_key\":\"2026-11\",\"generated\":4,\"duplicates\":0,\"failed\":0}",
+      "timestamp": "2026-11-01T06:28:38.921Z",
+      "previous_hash": "b36db865c4db94a259907a6da0dbab6b779758461dfeda1db1ccf71960c811d6",
+      "event_hash": "097f1b4ef7d7cd49e9a34f27e83cd31df69c4cb7da337dc092c4991b7b47e7a1",
+      "actor_user_id": 1
+    },
+    {
+      "event_id": 13,
+      "sequence_num": 13,
+      "aggregate_type": "billing_run",
+      "aggregate_id": "1793514522238",
+      "event_type": "BillingBatchExecuted",
+      "payload": "{\"billing_period_key\":\"2026-11\",\"generated\":0,\"duplicates\":4,\"failed\":0}",
+      "timestamp": "2026-11-01T06:28:42.238Z",
+      "previous_hash": "097f1b4ef7d7cd49e9a34f27e83cd31df69c4cb7da337dc092c4991b7b47e7a1",
+      "event_hash": "6526bd392f2944f3822da4c92cae41c8035223e6163baa0e5996e001d66fa2c1",
+      "actor_user_id": 1
+    },
+    {
+      "event_id": 14,
+      "sequence_num": 14,
+      "aggregate_type": "invoice",
+      "aggregate_id": "2",
+      "event_type": "PaymentReceived",
+      "payload": "{\"invoice_number\":\"INV-SUB-1002-2026-10\",\"amount\":\"100000\",\"invoice_now_paid\":false,\"new_balance\":218600}",
+      "timestamp": "2026-11-01T06:28:46.144Z",
+      "previous_hash": "6526bd392f2944f3822da4c92cae41c8035223e6163baa0e5996e001d66fa2c1",
+      "event_hash": "6564d5493d9c64e1cd74536bdc910600b8fe0e3dde86d2ea5343ce84aa325fff",
+      "actor_user_id": 1
+    },
+    {
+      "event_id": 15,
+      "sequence_num": 15,
+      "aggregate_type": "invoice",
+      "aggregate_id": "2",
+      "event_type": "PaymentReceived",
+      "payload": "{\"invoice_number\":\"INV-SUB-1002-2026-10\",\"amount\":\"218600\",\"invoice_now_paid\":true,\"new_balance\":0}",
+      "timestamp": "2026-11-01T06:28:52.693Z",
+      "previous_hash": "6564d5493d9c64e1cd74536bdc910600b8fe0e3dde86d2ea5343ce84aa325fff",
+      "event_hash": "f9bd2cd04c64f58cded31259a93e79996d6c335c6dc389a02c8e39ceb6daeafc",
+      "actor_user_id": 1
+    },
+    {
+      "event_id": 16,
+      "sequence_num": 16,
+      "aggregate_type": "user",
+      "aggregate_id": "4",
+      "event_type": "UserCreated",
+      "payload": "{\"email\":\"cust_1793514565074@example.com\",\"role\":\"CUSTOMER\"}",
+      "timestamp": "2026-11-01T06:29:25.199Z",
+      "previous_hash": "f9bd2cd04c64f58cded31259a93e79996d6c335c6dc389a02c8e39ceb6daeafc",
+      "event_hash": "8e92b7172cf12caa07aad8c890cac75a85416f0388fcfbd48c42828ca6a39c14",
+      "actor_user_id": 4
+    },
+    {
+      "event_id": 17,
+      "sequence_num": 17,
+      "aggregate_type": "user",
+      "aggregate_id": "1",
+      "event_type": "PasswordResetRequested",
+      "payload": "{\"email\":\"admin@brightloop.io\",\"token_preview\":\"rst_5b58…\"}",
+      "timestamp": "2026-11-01T06:29:25.210Z",
+      "previous_hash": "8e92b7172cf12caa07aad8c890cac75a85416f0388fcfbd48c42828ca6a39c14",
+      "event_hash": "2166db0be103a86b2382adc6dc9d9e01e8354043a1919ad782c705faf459306d",
+      "actor_user_id": 1
+    },
+    {
+      "event_id": 18,
+      "sequence_num": 18,
+      "aggregate_type": "quotation",
+      "aggregate_id": "2",
+      "event_type": "QuotationCreated",
+      "payload": "{\"quotation_number\":\"QUO-1002\",\"customer_id\":1,\"total\":10620}",
+      "timestamp": "2026-11-01T06:29:25.252Z",
+      "previous_hash": "2166db0be103a86b2382adc6dc9d9e01e8354043a1919ad782c705faf459306d",
+      "event_hash": "151c5bcda024c9002cb3027362e23732cfb4b95d9822d15577450518df05b98a",
+      "actor_user_id": 2
+    },
+    {
+      "event_id": 19,
+      "sequence_num": 19,
+      "aggregate_type": "subscription",
+      "aggregate_id": "6",
+      "event_type": "SubscriptionCreated",
+      "payload": "{\"subscription_number\":\"SUB-1006\",\"from_quotation\":\"QUO-1002\"}",
+      "timestamp": "2026-11-01T06:29:25.257Z",
+      "previous_hash": "151c5bcda024c9002cb3027362e23732cfb4b95d9822d15577450518df05b98a",
+      "event_hash": "d66619367593aa1fb1f2e3f7318d5efc64eff95f7bdc4a728c82a9c9da411b42",
+      "actor_user_id": 2
+    },
+    {
+      "event_id": 20,
+      "sequence_num": 20,
+      "aggregate_type": "invoice",
+      "aggregate_id": "8",
+      "event_type": "InvoiceGenerated",
+      "payload": "{\"invoice_number\":\"INV-SUB-1001-2026-12\",\"subscription_id\":1,\"total\":59000}",
+      "timestamp": "2026-11-01T06:29:25.264Z",
+      "previous_hash": "d66619367593aa1fb1f2e3f7318d5efc64eff95f7bdc4a728c82a9c9da411b42",
+      "event_hash": "f25306e6103310696e9e7331badb8f4282e019dd93a871401c2a2d7a8a1677c3",
+      "actor_user_id": 1
+    },
+    {
+      "event_id": 21,
+      "sequence_num": 21,
+      "aggregate_type": "invoice",
+      "aggregate_id": "9",
+      "event_type": "InvoiceGenerated",
+      "payload": "{\"invoice_number\":\"INV-SUB-1002-2026-12\",\"subscription_id\":2,\"total\":317420}",
+      "timestamp": "2026-11-01T06:29:25.265Z",
+      "previous_hash": "f25306e6103310696e9e7331badb8f4282e019dd93a871401c2a2d7a8a1677c3",
+      "event_hash": "63c0695bbcaa9ecb73559b5ea788403e46a4e2db1ccaca15e74b715ff456e591",
+      "actor_user_id": 1
+    },
+    {
+      "event_id": 22,
+      "sequence_num": 22,
+      "aggregate_type": "invoice",
+      "aggregate_id": "10",
+      "event_type": "InvoiceGenerated",
+      "payload": "{\"invoice_number\":\"INV-SUB-1003-2026-12\",\"subscription_id\":3,\"total\":28910}",
+      "timestamp": "2026-11-01T06:29:25.266Z",
+      "previous_hash": "63c0695bbcaa9ecb73559b5ea788403e46a4e2db1ccaca15e74b715ff456e591",
+      "event_hash": "b217cf8b73a3b92ffd9858ed49f831e6448eed0978bf18a941faeb6c4b57d96e",
+      "actor_user_id": 1
+    },
+    {
+      "event_id": 23,
+      "sequence_num": 23,
+      "aggregate_type": "invoice",
+      "aggregate_id": "11",
+      "event_type": "InvoiceGenerated",
+      "payload": "{\"invoice_number\":\"INV-SUB-1005-2026-12\",\"subscription_id\":5,\"total\":3540}",
+      "timestamp": "2026-11-01T06:29:25.268Z",
+      "previous_hash": "b217cf8b73a3b92ffd9858ed49f831e6448eed0978bf18a941faeb6c4b57d96e",
+      "event_hash": "6acf2614efd354fdd80dd9f6b20d197276037c1fa6d55613b405d727d176ba12",
+      "actor_user_id": 1
+    },
+    {
+      "event_id": 24,
+      "sequence_num": 24,
+      "aggregate_type": "billing_run",
+      "aggregate_id": "1793514565269",
+      "event_type": "BillingBatchExecuted",
+      "payload": "{\"billing_period_key\":\"2026-12\",\"generated\":4,\"duplicates\":0,\"failed\":0}",
+      "timestamp": "2026-11-01T06:29:25.269Z",
+      "previous_hash": "6acf2614efd354fdd80dd9f6b20d197276037c1fa6d55613b405d727d176ba12",
+      "event_hash": "7e94b02a98e5850b17c7a085242150a1fcdd216eb3ac18529c1b3d1a3945f2e9",
+      "actor_user_id": 1
+    },
+    {
+      "event_id": 25,
+      "sequence_num": 25,
+      "aggregate_type": "billing_run",
+      "aggregate_id": "1793514565274",
+      "event_type": "BillingBatchExecuted",
+      "payload": "{\"billing_period_key\":\"2026-12\",\"generated\":0,\"duplicates\":4,\"failed\":0}",
+      "timestamp": "2026-11-01T06:29:25.274Z",
+      "previous_hash": "7e94b02a98e5850b17c7a085242150a1fcdd216eb3ac18529c1b3d1a3945f2e9",
+      "event_hash": "f2953357eb5c5c15a15acb593d831ec4dd043dfbdf6679c374c701f9d08c9a22",
+      "actor_user_id": 1
+    },
+    {
+      "event_id": 26,
+      "sequence_num": 26,
+      "aggregate_type": "invoice",
+      "aggregate_id": "3",
+      "event_type": "PaymentReceived",
+      "payload": "{\"invoice_number\":\"INV-SUB-1003-2026-10\",\"amount\":\"14455\",\"invoice_now_paid\":false,\"new_balance\":14455}",
+      "timestamp": "2026-11-01T06:29:25.294Z",
+      "previous_hash": "f2953357eb5c5c15a15acb593d831ec4dd043dfbdf6679c374c701f9d08c9a22",
+      "event_hash": "1d693143bab96ba3257f9a6d0169148d73aa43b4ca6b864ec620aeb1e511561b",
+      "actor_user_id": 1
+    },
+    {
+      "event_id": 27,
+      "sequence_num": 27,
+      "aggregate_type": "invoice",
+      "aggregate_id": "3",
+      "event_type": "PaymentReceived",
+      "payload": "{\"invoice_number\":\"INV-SUB-1003-2026-10\",\"amount\":\"14455\",\"invoice_now_paid\":true,\"new_balance\":0}",
+      "timestamp": "2026-11-01T06:29:25.304Z",
+      "previous_hash": "1d693143bab96ba3257f9a6d0169148d73aa43b4ca6b864ec620aeb1e511561b",
+      "event_hash": "5e59a7c58e0779f5f2055eaa89594e62d500ec4927de53796d7b834df996a3c3",
+      "actor_user_id": 1
+    },
+    {
+      "event_id": 28,
+      "sequence_num": 28,
+      "aggregate_type": "user",
+      "aggregate_id": "5",
+      "event_type": "UserCreated",
+      "payload": "{\"email\":\"cust_1793514575610@example.com\",\"role\":\"CUSTOMER\"}",
+      "timestamp": "2026-11-01T06:29:35.720Z",
+      "previous_hash": "5e59a7c58e0779f5f2055eaa89594e62d500ec4927de53796d7b834df996a3c3",
+      "event_hash": "c8a168f5978182f4a81e76ab60019648e9524226345cf4a125944522941ea42c",
+      "actor_user_id": 5
+    },
+    {
+      "event_id": 29,
+      "sequence_num": 29,
+      "aggregate_type": "user",
+      "aggregate_id": "5",
+      "event_type": "PasswordResetRequested",
+      "payload": "{\"email\":\"cust_1793514575610@example.com\",\"token_preview\":\"rst_4bce…\"}",
+      "timestamp": "2026-11-01T06:29:35.727Z",
+      "previous_hash": "c8a168f5978182f4a81e76ab60019648e9524226345cf4a125944522941ea42c",
+      "event_hash": "7a3d3ecbcc6a2aa25e5c9fd0d11031e3e154c79e626938523cab164e5bafe223",
+      "actor_user_id": 5
+    },
+    {
+      "event_id": 30,
+      "sequence_num": 30,
+      "aggregate_type": "user",
+      "aggregate_id": "5",
+      "event_type": "PasswordResetCompleted",
+      "payload": "{\"email\":\"cust_1793514575610@example.com\"}",
+      "timestamp": "2026-11-01T06:29:35.847Z",
+      "previous_hash": "7a3d3ecbcc6a2aa25e5c9fd0d11031e3e154c79e626938523cab164e5bafe223",
+      "event_hash": "4dfd38872c83576a81c51ae43a1e6bb0158a733a7460da6958278d6fb80f1190",
+      "actor_user_id": 5
+    },
+    {
+      "event_id": 31,
+      "sequence_num": 31,
+      "aggregate_type": "quotation",
+      "aggregate_id": "3",
+      "event_type": "QuotationCreated",
+      "payload": "{\"quotation_number\":\"QUO-1003\",\"customer_id\":1,\"total\":10620}",
+      "timestamp": "2026-11-01T06:29:35.889Z",
+      "previous_hash": "4dfd38872c83576a81c51ae43a1e6bb0158a733a7460da6958278d6fb80f1190",
+      "event_hash": "2cc58e4deb4cad4543760822bb0abb908d2c03316f5c641ae8190924cfe3c144",
+      "actor_user_id": 2
+    },
+    {
+      "event_id": 32,
+      "sequence_num": 32,
+      "aggregate_type": "subscription",
+      "aggregate_id": "7",
+      "event_type": "SubscriptionCreated",
+      "payload": "{\"subscription_number\":\"SUB-1007\",\"from_quotation\":\"QUO-1003\"}",
+      "timestamp": "2026-11-01T06:29:35.894Z",
+      "previous_hash": "2cc58e4deb4cad4543760822bb0abb908d2c03316f5c641ae8190924cfe3c144",
+      "event_hash": "45ba9a8604b070472cd6a2594c38659dd5fd6fa96c9a64106bfae38345dae792",
+      "actor_user_id": 2
+    },
+    {
+      "event_id": 33,
+      "sequence_num": 33,
+      "aggregate_type": "billing_run",
+      "aggregate_id": "1793514575904",
+      "event_type": "BillingBatchExecuted",
+      "payload": "{\"billing_period_key\":\"2026-12\",\"generated\":0,\"duplicates\":4,\"failed\":0}",
+      "timestamp": "2026-11-01T06:29:35.904Z",
+      "previous_hash": "45ba9a8604b070472cd6a2594c38659dd5fd6fa96c9a64106bfae38345dae792",
+      "event_hash": "cd484c8237b73b2f7f8ed2ddb2d4f491b7c23fff43408eec0697a36fc05373a9",
+      "actor_user_id": 1
+    },
+    {
+      "event_id": 34,
+      "sequence_num": 34,
+      "aggregate_type": "billing_run",
+      "aggregate_id": "1793514575908",
+      "event_type": "BillingBatchExecuted",
+      "payload": "{\"billing_period_key\":\"2026-12\",\"generated\":0,\"duplicates\":4,\"failed\":0}",
+      "timestamp": "2026-11-01T06:29:35.908Z",
+      "previous_hash": "cd484c8237b73b2f7f8ed2ddb2d4f491b7c23fff43408eec0697a36fc05373a9",
+      "event_hash": "1d2107a75956700738ecf7f334f8f93e90e0cf08a12d5708ed14778ab8517796",
+      "actor_user_id": 1
+    },
+    {
+      "event_id": 35,
+      "sequence_num": 35,
+      "aggregate_type": "invoice",
+      "aggregate_id": "4",
+      "event_type": "PaymentReceived",
+      "payload": "{\"invoice_number\":\"INV-SUB-1001-2026-11\",\"amount\":\"29500\",\"invoice_now_paid\":false,\"new_balance\":29500}",
+      "timestamp": "2026-11-01T06:29:35.919Z",
+      "previous_hash": "1d2107a75956700738ecf7f334f8f93e90e0cf08a12d5708ed14778ab8517796",
+      "event_hash": "80d31442817447cd9afa7fbcbef099180936601fdcd2abd53ea4207b5defab4e",
+      "actor_user_id": 1
+    },
+    {
+      "event_id": 36,
+      "sequence_num": 36,
+      "aggregate_type": "invoice",
+      "aggregate_id": "4",
+      "event_type": "PaymentReceived",
+      "payload": "{\"invoice_number\":\"INV-SUB-1001-2026-11\",\"amount\":\"29500\",\"invoice_now_paid\":true,\"new_balance\":0}",
+      "timestamp": "2026-11-01T06:29:35.922Z",
+      "previous_hash": "80d31442817447cd9afa7fbcbef099180936601fdcd2abd53ea4207b5defab4e",
+      "event_hash": "b789ef21426437c52d2c7a07306bd7f02d6e4c83205668dd8f301e5fa5013395",
+      "actor_user_id": 1
+    },
+    {
+      "event_id": 37,
+      "sequence_num": 37,
+      "aggregate_type": "user",
+      "aggregate_id": "6",
+      "event_type": "UserCreated",
+      "payload": "{\"email\":\"cust_1793514596830@example.com\",\"role\":\"CUSTOMER\"}",
+      "timestamp": "2026-11-01T06:29:56.943Z",
+      "previous_hash": "b789ef21426437c52d2c7a07306bd7f02d6e4c83205668dd8f301e5fa5013395",
+      "event_hash": "9e4e68e53d35a7b611376bd5562f58d0c5ce43db0a07e127490bd9d038db843a",
+      "actor_user_id": 6
+    },
+    {
+      "event_id": 38,
+      "sequence_num": 38,
+      "aggregate_type": "user",
+      "aggregate_id": "6",
+      "event_type": "PasswordResetRequested",
+      "payload": "{\"email\":\"cust_1793514596830@example.com\",\"token_preview\":\"rst_9bb6…\"}",
+      "timestamp": "2026-11-01T06:29:56.949Z",
+      "previous_hash": "9e4e68e53d35a7b611376bd5562f58d0c5ce43db0a07e127490bd9d038db843a",
+      "event_hash": "60ababc577a682c92535cca3d1b472326ec7e41e9eb76d52247eeb5933ca2a1a",
+      "actor_user_id": 6
+    },
+    {
+      "event_id": 39,
+      "sequence_num": 39,
+      "aggregate_type": "user",
+      "aggregate_id": "6",
+      "event_type": "PasswordResetCompleted",
+      "payload": "{\"email\":\"cust_1793514596830@example.com\"}",
+      "timestamp": "2026-11-01T06:29:57.059Z",
+      "previous_hash": "60ababc577a682c92535cca3d1b472326ec7e41e9eb76d52247eeb5933ca2a1a",
+      "event_hash": "45c3a4f6986c0d00f40afd27340b35c6b9a633cc6c6ca224338c36ce731e4884",
+      "actor_user_id": 6
+    },
+    {
+      "event_id": 40,
+      "sequence_num": 40,
+      "aggregate_type": "quotation",
+      "aggregate_id": "4",
+      "event_type": "QuotationCreated",
+      "payload": "{\"quotation_number\":\"QUO-1004\",\"customer_id\":1,\"total\":10620}",
+      "timestamp": "2026-11-01T06:29:57.098Z",
+      "previous_hash": "45c3a4f6986c0d00f40afd27340b35c6b9a633cc6c6ca224338c36ce731e4884",
+      "event_hash": "24b41efc3e2e9e5b8b37bf7aa63d5cea0571d8e36499a56e090f4e4a7153ea33",
+      "actor_user_id": 2
+    },
+    {
+      "event_id": 41,
+      "sequence_num": 41,
+      "aggregate_type": "subscription",
+      "aggregate_id": "8",
+      "event_type": "SubscriptionCreated",
+      "payload": "{\"subscription_number\":\"SUB-1008\",\"from_quotation\":\"QUO-1004\"}",
+      "timestamp": "2026-11-01T06:29:57.103Z",
+      "previous_hash": "24b41efc3e2e9e5b8b37bf7aa63d5cea0571d8e36499a56e090f4e4a7153ea33",
+      "event_hash": "9ddccd7d3f450fa9c8652a25f189876c876a2cdad55bd2eb28bd3098a9d1ef81",
+      "actor_user_id": 2
+    },
+    {
+      "event_id": 42,
+      "sequence_num": 42,
+      "aggregate_type": "invoice",
+      "aggregate_id": "12",
+      "event_type": "InvoiceGenerated",
+      "payload": "{\"invoice_number\":\"INV-SUB-1001-2028-11\",\"subscription_id\":1,\"total\":59000}",
+      "timestamp": "2026-11-01T06:29:57.110Z",
+      "previous_hash": "9ddccd7d3f450fa9c8652a25f189876c876a2cdad55bd2eb28bd3098a9d1ef81",
+      "event_hash": "b7a4b4bc4e07d8b8a2c5f1c02803c8ec460806fc1cd72e82dc69e23587a4d0db",
+      "actor_user_id": 1
+    },
+    {
+      "event_id": 43,
+      "sequence_num": 43,
+      "aggregate_type": "invoice",
+      "aggregate_id": "13",
+      "event_type": "InvoiceGenerated",
+      "payload": "{\"invoice_number\":\"INV-SUB-1002-2028-11\",\"subscription_id\":2,\"total\":317420}",
+      "timestamp": "2026-11-01T06:29:57.111Z",
+      "previous_hash": "b7a4b4bc4e07d8b8a2c5f1c02803c8ec460806fc1cd72e82dc69e23587a4d0db",
+      "event_hash": "c8c309f705674827c6adfde56299331c5ad94896e8dc31c21d08262654a21678",
+      "actor_user_id": 1
+    },
+    {
+      "event_id": 44,
+      "sequence_num": 44,
+      "aggregate_type": "invoice",
+      "aggregate_id": "14",
+      "event_type": "InvoiceGenerated",
+      "payload": "{\"invoice_number\":\"INV-SUB-1003-2028-11\",\"subscription_id\":3,\"total\":28910}",
+      "timestamp": "2026-11-01T06:29:57.112Z",
+      "previous_hash": "c8c309f705674827c6adfde56299331c5ad94896e8dc31c21d08262654a21678",
+      "event_hash": "8ab2da825ce6bc9d9960d026f009a2ad7a021c80d50afec2d9366fc030111146",
+      "actor_user_id": 1
+    },
+    {
+      "event_id": 45,
+      "sequence_num": 45,
+      "aggregate_type": "invoice",
+      "aggregate_id": "15",
+      "event_type": "InvoiceGenerated",
+      "payload": "{\"invoice_number\":\"INV-SUB-1005-2028-11\",\"subscription_id\":5,\"total\":3540}",
+      "timestamp": "2026-11-01T06:29:57.112Z",
+      "previous_hash": "8ab2da825ce6bc9d9960d026f009a2ad7a021c80d50afec2d9366fc030111146",
+      "event_hash": "e976da9d10cf0d8c25d96045a56e55db51dc962e862ef06b0a479fac3cb362ef",
+      "actor_user_id": 1
+    },
+    {
+      "event_id": 46,
+      "sequence_num": 46,
+      "aggregate_type": "billing_run",
+      "aggregate_id": "1793514597113",
+      "event_type": "BillingBatchExecuted",
+      "payload": "{\"billing_period_key\":\"2028-11\",\"generated\":4,\"duplicates\":0,\"failed\":0}",
+      "timestamp": "2026-11-01T06:29:57.113Z",
+      "previous_hash": "e976da9d10cf0d8c25d96045a56e55db51dc962e862ef06b0a479fac3cb362ef",
+      "event_hash": "e156b9568216bd2be2c604baf3a88dc092ef68e8d3cb771dcdd08f8073b1a604",
+      "actor_user_id": 1
+    },
+    {
+      "event_id": 47,
+      "sequence_num": 47,
+      "aggregate_type": "billing_run",
+      "aggregate_id": "1793514597120",
+      "event_type": "BillingBatchExecuted",
+      "payload": "{\"billing_period_key\":\"2028-11\",\"generated\":0,\"duplicates\":4,\"failed\":0}",
+      "timestamp": "2026-11-01T06:29:57.120Z",
+      "previous_hash": "e156b9568216bd2be2c604baf3a88dc092ef68e8d3cb771dcdd08f8073b1a604",
+      "event_hash": "04e251e3f7c8c7a88567089a9a3e195ed24e0be80d6da2ebe248d6123c3bfeb2",
+      "actor_user_id": 1
+    },
+    {
+      "event_id": 48,
+      "sequence_num": 48,
+      "aggregate_type": "invoice",
+      "aggregate_id": "5",
+      "event_type": "PaymentReceived",
+      "payload": "{\"invoice_number\":\"INV-SUB-1002-2026-11\",\"amount\":\"158710\",\"invoice_now_paid\":false,\"new_balance\":158710}",
+      "timestamp": "2026-11-01T06:29:57.133Z",
+      "previous_hash": "04e251e3f7c8c7a88567089a9a3e195ed24e0be80d6da2ebe248d6123c3bfeb2",
+      "event_hash": "1edbba79d112dc390fb0ee2fa2a4ad757d72cf1c8fa70d59107c3987f9d63529",
+      "actor_user_id": 1
+    },
+    {
+      "event_id": 49,
+      "sequence_num": 49,
+      "aggregate_type": "invoice",
+      "aggregate_id": "5",
+      "event_type": "PaymentReceived",
+      "payload": "{\"invoice_number\":\"INV-SUB-1002-2026-11\",\"amount\":\"158710\",\"invoice_now_paid\":true,\"new_balance\":0}",
+      "timestamp": "2026-11-01T06:29:57.139Z",
+      "previous_hash": "1edbba79d112dc390fb0ee2fa2a4ad757d72cf1c8fa70d59107c3987f9d63529",
+      "event_hash": "74b4ce0065f70444d5a5ffd5238cfb682f1f1a646971ffe782530bfeca29a552",
+      "actor_user_id": 1
+    },
+    {
+      "event_id": 50,
+      "sequence_num": 50,
+      "aggregate_type": "user",
+      "aggregate_id": "7",
+      "event_type": "UserCreated",
+      "payload": "{\"email\":\"cust_1793514618228@example.com\",\"role\":\"CUSTOMER\"}",
+      "timestamp": "2026-11-01T06:30:18.341Z",
+      "previous_hash": "74b4ce0065f70444d5a5ffd5238cfb682f1f1a646971ffe782530bfeca29a552",
+      "event_hash": "6acbda3efd9da19ae9a31231ef0924f2c977a7543833f1666594bf9cce91997c",
+      "actor_user_id": 7
+    },
+    {
+      "event_id": 51,
+      "sequence_num": 51,
+      "aggregate_type": "user",
+      "aggregate_id": "7",
+      "event_type": "PasswordResetRequested",
+      "payload": "{\"email\":\"cust_1793514618228@example.com\",\"token_preview\":\"rst_ad50…\"}",
+      "timestamp": "2026-11-01T06:30:18.348Z",
+      "previous_hash": "6acbda3efd9da19ae9a31231ef0924f2c977a7543833f1666594bf9cce91997c",
+      "event_hash": "3bba86e7ba22650288011445dc9132b1fea4766398dbf8dd356fea5b0fdc7972",
+      "actor_user_id": 7
+    },
+    {
+      "event_id": 52,
+      "sequence_num": 52,
+      "aggregate_type": "user",
+      "aggregate_id": "7",
+      "event_type": "PasswordResetCompleted",
+      "payload": "{\"email\":\"cust_1793514618228@example.com\"}",
+      "timestamp": "2026-11-01T06:30:18.453Z",
+      "previous_hash": "3bba86e7ba22650288011445dc9132b1fea4766398dbf8dd356fea5b0fdc7972",
+      "event_hash": "7457527537981b1f5b26bcdae9188b88f73c0ae937d7fee6d89777fe280dc561",
+      "actor_user_id": 7
+    },
+    {
+      "event_id": 53,
+      "sequence_num": 53,
+      "aggregate_type": "quotation",
+      "aggregate_id": "5",
+      "event_type": "QuotationCreated",
+      "payload": "{\"quotation_number\":\"QUO-1005\",\"customer_id\":1,\"total\":10620}",
+      "timestamp": "2026-11-01T06:30:18.485Z",
+      "previous_hash": "7457527537981b1f5b26bcdae9188b88f73c0ae937d7fee6d89777fe280dc561",
+      "event_hash": "42993ab85a8cb98fae457950bf6dcdc243e56cde349c2dc6657309a9844b3768",
+      "actor_user_id": 2
+    },
+    {
+      "event_id": 54,
+      "sequence_num": 54,
+      "aggregate_type": "subscription",
+      "aggregate_id": "9",
+      "event_type": "SubscriptionCreated",
+      "payload": "{\"subscription_number\":\"SUB-1009\",\"from_quotation\":\"QUO-1005\"}",
+      "timestamp": "2026-11-01T06:30:18.490Z",
+      "previous_hash": "42993ab85a8cb98fae457950bf6dcdc243e56cde349c2dc6657309a9844b3768",
+      "event_hash": "aa4d0de0f62318249362a0e7648d5ccee5bd58ea040865249bdfc9b4e5c82a0e",
+      "actor_user_id": 2
+    },
+    {
+      "event_id": 55,
+      "sequence_num": 55,
+      "aggregate_type": "invoice",
+      "aggregate_id": "16",
+      "event_type": "InvoiceGenerated",
+      "payload": "{\"invoice_number\":\"INV-SUB-1001-2028-12\",\"subscription_id\":1,\"total\":59000}",
+      "timestamp": "2026-11-01T06:30:18.496Z",
+      "previous_hash": "aa4d0de0f62318249362a0e7648d5ccee5bd58ea040865249bdfc9b4e5c82a0e",
+      "event_hash": "185555bcd0d4052a934c1d629a26d68fdb87092d076bf889243cd3c452c617c7",
+      "actor_user_id": 1
+    },
+    {
+      "event_id": 56,
+      "sequence_num": 56,
+      "aggregate_type": "invoice",
+      "aggregate_id": "17",
+      "event_type": "InvoiceGenerated",
+      "payload": "{\"invoice_number\":\"INV-SUB-1002-2028-12\",\"subscription_id\":2,\"total\":317420}",
+      "timestamp": "2026-11-01T06:30:18.497Z",
+      "previous_hash": "185555bcd0d4052a934c1d629a26d68fdb87092d076bf889243cd3c452c617c7",
+      "event_hash": "a8f07591eaec06a2a24aec86a9f83a9cb205e56041c51f325ec6842b514bdffb",
+      "actor_user_id": 1
+    },
+    {
+      "event_id": 57,
+      "sequence_num": 57,
+      "aggregate_type": "invoice",
+      "aggregate_id": "18",
+      "event_type": "InvoiceGenerated",
+      "payload": "{\"invoice_number\":\"INV-SUB-1003-2028-12\",\"subscription_id\":3,\"total\":28910}",
+      "timestamp": "2026-11-01T06:30:18.498Z",
+      "previous_hash": "a8f07591eaec06a2a24aec86a9f83a9cb205e56041c51f325ec6842b514bdffb",
+      "event_hash": "58afc623e9689dd30b4b996f049c529cef72d475d880c451adf671d807e0d73f",
+      "actor_user_id": 1
+    },
+    {
+      "event_id": 58,
+      "sequence_num": 58,
+      "aggregate_type": "invoice",
+      "aggregate_id": "19",
+      "event_type": "InvoiceGenerated",
+      "payload": "{\"invoice_number\":\"INV-SUB-1005-2028-12\",\"subscription_id\":5,\"total\":3540}",
+      "timestamp": "2026-11-01T06:30:18.499Z",
+      "previous_hash": "58afc623e9689dd30b4b996f049c529cef72d475d880c451adf671d807e0d73f",
+      "event_hash": "d72f3190ec7d864f8cbab2aa1dea0435b19b29cf1e1d952b86cb41e0bee589c3",
+      "actor_user_id": 1
+    },
+    {
+      "event_id": 59,
+      "sequence_num": 59,
+      "aggregate_type": "billing_run",
+      "aggregate_id": "1793514618499",
+      "event_type": "BillingBatchExecuted",
+      "payload": "{\"billing_period_key\":\"2028-12\",\"generated\":4,\"duplicates\":0,\"failed\":0}",
+      "timestamp": "2026-11-01T06:30:18.499Z",
+      "previous_hash": "d72f3190ec7d864f8cbab2aa1dea0435b19b29cf1e1d952b86cb41e0bee589c3",
+      "event_hash": "e719053db7b36f40927403fb3b8db2a625750a2626f61bda50130d17a0ff3ade",
+      "actor_user_id": 1
+    },
+    {
+      "event_id": 60,
+      "sequence_num": 60,
+      "aggregate_type": "billing_run",
+      "aggregate_id": "1793514618504",
+      "event_type": "BillingBatchExecuted",
+      "payload": "{\"billing_period_key\":\"2028-12\",\"generated\":0,\"duplicates\":4,\"failed\":0}",
+      "timestamp": "2026-11-01T06:30:18.504Z",
+      "previous_hash": "e719053db7b36f40927403fb3b8db2a625750a2626f61bda50130d17a0ff3ade",
+      "event_hash": "d8c6c9fd5874df6b20a6d0fec2b081baadab49f044978b0de82d1f56ddc924d7",
+      "actor_user_id": 1
+    },
+    {
+      "event_id": 61,
+      "sequence_num": 61,
+      "aggregate_type": "invoice",
+      "aggregate_id": "6",
+      "event_type": "PaymentReceived",
+      "payload": "{\"invoice_number\":\"INV-SUB-1003-2026-11\",\"amount\":\"14455\",\"invoice_now_paid\":false,\"new_balance\":14455}",
+      "timestamp": "2026-11-01T06:30:18.513Z",
+      "previous_hash": "d8c6c9fd5874df6b20a6d0fec2b081baadab49f044978b0de82d1f56ddc924d7",
+      "event_hash": "b04ebedbbfeddfe179eb984123fbd3e4aeeca3a9b952af62f8ca8c998c934d11",
+      "actor_user_id": 1
+    },
+    {
+      "event_id": 62,
+      "sequence_num": 62,
+      "aggregate_type": "invoice",
+      "aggregate_id": "6",
+      "event_type": "PaymentReceived",
+      "payload": "{\"invoice_number\":\"INV-SUB-1003-2026-11\",\"amount\":\"14455\",\"invoice_now_paid\":true,\"new_balance\":0}",
+      "timestamp": "2026-11-01T06:30:18.517Z",
+      "previous_hash": "b04ebedbbfeddfe179eb984123fbd3e4aeeca3a9b952af62f8ca8c998c934d11",
+      "event_hash": "90a7d320f58cd4548cb3b44af30575c63e2c4e73f33ddd47c036143327c4e145",
+      "actor_user_id": 1
+    }
+  ],
+  "lastSequenceNum": 62,
+  "lastEventHash": "90a7d320f58cd4548cb3b44af30575c63e2c4e73f33ddd47c036143327c4e145"
+}
